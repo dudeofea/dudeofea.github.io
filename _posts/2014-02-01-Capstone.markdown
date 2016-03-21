@@ -1,0 +1,65 @@
+---
+layout: post
+title:  "Archived: Capstone"
+date:   2014-02-01
+tags: dsp touch archived
+---
+First a little back story: I couldn't have done this myself, so thanks Adam Thomson and Alix Krahn for all the help! This was done for our <a href="http://www.ece.ualberta.ca/~elliott/ece492/">ECE 492</a> class which is a final design project that engineering students do before graduating. Only, I'm wasn't graduating with the rest so I had wayy more time to work on this.
+
+Our initial ideas were pretty insane and undoable (mostly my ideas). To be fair, I had been on a <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&feature=kp">roll</a> as of recently with my last two jobs. What I didn't know was what was awaiting us in the labs...
+
+Enter the DE2
+-------------
+
+If I had to draw a pi chart of how I spent my time on this project, it would have to be this:
+
+<img src="/images/FUAltera.png" height="350px"/>
+
+Although, I must be the one to blame because it wasn't that the DE2 Board couldn't do what I wanted it to but rather that I couldn't <b>make</b> it do what I wanted to.
+
+This "development" board, provided by Altera, leads to more character development than anything else. You know you're fucked when the guys working <b>at Altera</b> can't quite get the bugs worked out of <b><r2>their tutorials!!!</r2></b>
+
+But enough about the hardware...
+
+Physics
+-------
+
+How does it do what it does? How it does what it do? Does how what it does it do? It does, but what it do?! What?! How? Do?!
+
+Our touchscreen uses <r1>FTIR</r1> (pronounced Fe-Tehr). Which probably means something but everyone who uses the word <r1>FTIR</r1> doesn't seem to say what it is. I'm guessing it's like some kind of Magician's Circle(jerk) or something, so I'll just keep my mouth shut and use more words I don't know.
+
+The <r1>FTIR</r1> is implemented in a <b1>Full Stack</b1> <g1>IEEE</g1> <b2>Javabean</b2>, enabling our <g2>Bricks-and-Clicks</g2> <b3>Big Data</b3> to <g3>Step Outside the Box</g3>. <r2>Utilizing</r2> <b4>social trends</b4>, we extract the <g4>Cloud</g4> <b5>NUI</b5> using <g5>4G</g5> <b6>Lean Manufacturing</b6> <g6>Methodologies</g6>. Then with <b7>Hyper-Scaled</b7> <g7>Fuzzy Logic</g7>, our <b8>Haskel</b8> <r4>Back-End</r4> <g8>Ingest</g8> a...uuuugh...wait...what just came over me. I've just been possessed by management...am I in a <a href="http://dilbert.com/mashups/comic/100739/">Dilbert Cartoon!?</a> <a href="http://store.steampowered.com/app/15560/">AAAAAAaaaaaAAAAAaaaaAAAAaAAAaaAAAAA!!!</a>
+
+Alright alright....here's how it actually works:
+
+<img src="/images/FTIR.png" height="250px"/>
+
+It's a table with an acryllic surface surrounded by infrared LEDs. The LEDs shine into the acryllic and because of the refractive index (google it) of the acryllic, the IR beams get stuck inside. Unless your finger <b>swoops</b> down to save the day.
+
+Then, our space age (read: as old as space) camera will read the incoming IR beams as white pixels on a black backdrop. We made our LED camera ourselves using the best things of the 90's: Eyeball shaped webcams and Floppy Disks. <a href="http://www.instructables.com/id/Making-a-Night-Vision-Webcam/?ALLSTEPS">Tutorial Link</a>
+
+Here's a sample image from our touchscreen
+
+<img src="/images/Capstone2.jpg" height="350px"/>
+
+DSP
+---
+
+To interpret that data as fingers (no, you can't just cast it to a <g2>finger</g2> type) we need to group the pixels together and manage a list of the groups. Groups of sufficient pixel size can stay and the others don't get picked in gym class....errr I mean don't stay. You can check out the full code on my github <a href="https://github.com/dudeofea/Capstone-2014">repo</a>. The output of the centroid (center of the pixel group) calculation looks like this:
+
+<img src="/images/Capstone3.png" height="550px"/>
+
+We also used a few other <a href="https://www.youtube.com/watch?v=rPelu5hX6XQ">tricks</a> to help with the sensitivity of the screen. By lowering the triggering threshold / amplifying the values we can increase the sensitivity but we end up catching the edges of the screen more than anything else. So we decided to store an initial image of the screen, and subtract that from every image to just get the difference. Kind of like how you're not supposed to touch the joystick on your <b3>gamecube</b3> controller when it <a href="http://gaming.stackexchange.com/questions/138719/how-do-i-calibrate-a-gamecube-controller">starts up</a>.
+
+We also used a calibration algorithm that I know nothing about, nor do I care (for the moment). I gotta say though, uncalibrated touchscreens or....badly calibrated touch screens, are hilarious.
+
+Final Product
+-------------
+
+To use our touchscreen we made a sample app that takes advantage of our hardware (well, mostly my laptop because fuck the DE2). Yea, see that academia, we actually found a use for our technology then <a href="https://www.youtube.com/watch?v=KC6T3_O2iWc">applied it!</a> There are actually 2 programs we made, one is a multifingered <r1>clusterfuck</r1> of a paint app. Just paint w/e you want with however many people, the DE2 don't judge, each finger gets it's own color of whatever the hell the program decides to give it. The other is a more structured application for the <g1>artist</g1> in us (if they were 5). You can paint with 1 finger, pick the color with 2 fingers, change the size with 3 fingers and erase the screen with the palm of your hand. To achieve the palm effect we look for a <b1>really</b1> big centroid.
+
+<img src="/images/Capstone1.jpg" height="500px"/>
+
+**END OF POST**
+
+Archived from my old website. You wouldn't believe the amount of time I spent debugging a USB stack I wrote, and then the stunningly short amount of time we wrote everything else when we couldn't use that stack. DAMN YOU ISOCHRONOUS PACKETS!!! YOU AND YOUR PING-PONG BUFFERS CAN ALL GO TO `/dev/null`!!!1!10101!!0
