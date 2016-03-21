@@ -157,4 +157,4 @@ following the tradition of giving pedals abstract and synesthetic names, I chris
 
 **END OF POST**
 
-Archived from my previous website
+Archived from my previous website. Still have the working pedal, haven't touched it in awhile. I'm on to other musical things now.

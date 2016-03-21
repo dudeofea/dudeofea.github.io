@@ -1,0 +1,172 @@
+---
+layout: post
+title:  "Archived: ghsh"
+date:   2015-01-01
+tags: ai language archived
+---
+Ok, so like, I know this is a totally impossible project but why not. I want to first make something which can learn from sentences which I give to it. I say "jump", it says "how high?". But seriously, I want something which can understand the semantics of a sentence and incorporate that into it's pre-existing semantical network. It's not computer consiousness per-se but it's a precursor to it from the way I see it.
+
+ghsh gets it's name from the anime/manga Ghost in the Shell. I cite a couple sources below but here are some extra ones just to get you thinking:
+
+<ul>
+    <li><a href="https://www.youtube.com/watch?v=XWuUdJo9ubM">The Real Thing (1980) - James Burke</a></li>
+    <li><a href="http://www.physixfan.com/wp-content/files/GEBen.pdf">Godel, Escher, Bach - Douglas Hofstadter</a></li>
+</ul>
+
+Semantics
+---------
+
+After a bit of research, I found <a href="http://webspace.ship.edu/cgboer/semantics.html">this</a> helpful for a way to link sentence trees (which I learnt from <a href="http://www.nltk.org/book/ch08.html">here</a>) to semantical nets, and what a good semantical net might look like. So let's try an example: "dogs have 4 legs" can be understood as <r2>dogs</r2> <b4>--have--></b4> <r2>4 legs</r2> or as dogs being 4-legged or as dogs belonging to quadrupeds or many other definitions like that. What I want is a way to understand sentences like that and generate them as well (later...).
+
+At first the links were distinct classes from nodes. The nodes being concepts like <r1>"dogs"</r1>, <r2>"animals"</r2>, <r3>"quadrupeds"</r3> and so forth and links being the in-between stuff like <b1>"with"</b1>, <b2>"is"</b2>, <b3>"have"</b3>, etc. But then I realised that links are concepts themselves so that confused the fuck out of me. So I decided to remove links and allow nodes the ability to link other nodes. Right now the links between concepts are solid (best word I could find) meaning that things either are or aren't. In the brain, things aren't so. Things only are because they have a strong connections between those 2 things.
+
+If we take a tangent for a bit, we can think of the fact that things like <r1>"brown"</r1> and <r2>"fur"</r2> and <r3>"paws"</r3> are very closely related (at least in my case) to the thing <r4>"dog"</r4> in my brain. I read this old book (that I can't find <r1>:(</r1> ) that was talking about semantic distance in the brain relating to myelination (words words words). Basically this study which I believe to be true said that concepts in the brain are "brought closer together" using myelin as a way to reduce delay between those 2 (or more) parts of your brain. Even if concepts are scattered across your brain, myelin can bring them together by increasing the link between them. I don't know if the brain has a way of knowing that things are "links" or "nodes" or other things I invented (most likely not) or if it just guesses that when you have <r1>"me"</r1> and <r2>"spagetti"</r2> linked together last tuesday it just assumes that <r1>I</r1> ate <r2>spagetti</r2> last tuesday. Like, does the brain make a specific kind of link (or link structure) to represent <r1>me</r1> eating <r2>spagetti</r2> last tuesday or does it just put the 2 concepts together (to save space?) and let me guess what happened after the fact? I don't know and I doubt everyone's brain works the same.
+
+Another neat thing is consider the sentence <g2>"Hock Seng scowls at the safe where it squats across from him"</g2> from the book The Windup Girl (chapter 16). I had previously never thought of safes as being able to squat, and the idea of a squatting-safe just makes me laugh. A friend of mine suggested that because of that sentence, my understanding of what a safe is is forever changed because I know that squat and safe can be used together in a sentence. It changes (albeit not much) my conception of what a safe is. Things like this are why I would need to eventually make concepts fluid instead of solid in ghsh, and allow things to not neccesarily "be" exactly this but rather to be a bit of this and a bit of that.
+
+And finally, another thing to consider is that even though every concept so far has had a name behind it, I should be able to include concepts (which might represent another concept net somewhere else) which have no explicit name but can of course still be explained by doing a sort of (what I like to call a) "stack unload". A stack unload being the things you have to say to someone to explain a concept to them given that you know what they know on the subject. So "to know this you must first know all these other things, then I'll explain how they relate"
+
+All this is getting really vague, so let's see some code (Python):
+
+{% highlight python %}
+class KNode(object):
+	"""Semantic node, holds relations to other nodes"""
+	def __init__(self, name):
+		self.name = name
+		self.linked_to = []	#used if this node is linked to a linking node in a way
+		self.links = []		#used if this nodes links other nodes together in a way
+		self.cond = False	#for searching for a condition in many nodes
+		self.ref = -1		#if node is referring to another node
+{% endhighlight %}
+
+After messing around with KNodes (contained within a KNet, shown later) I realized that nodes weren't able to link to a specific part of another node. Consider the sentence "he likes the girl who wore the green dress" which will also be used later. In this sentence, there was <b3>a girl who wore a green dress</b3> and <r1>he</r1> likes <b1>her</b1>. So it's not a simple "<r1>he</r1> likes <b1>her</b1>" but rather "<r1>he</r1> likes <b3>(complicated thing)</b3>". Before, I could create the link which "showed" that the girl wore a dress (forget the green part for now) and also that "he" liked that. But he liked then entire link! In this case he likes the girl. Other permutations of that sentence would be "<r1>he</r1> likes <g1>the green dress the girl was wearing</g1>" (he likes the <g1>dress</g1> specifically) or "<r1>he</r1> likes <r4>the wearing of the green dress by the girl</r4>" (he likes the <r4>wearing</r4> specifically). So I needed something to represent that. Enter the KPort:
+
+{% highlight python %}
+class KPort(object):
+	"""A sort of index describing what something links to"""
+	def __init__(self, index, subs):
+		self.index = index
+		self.subs = subs      #referring to a certain part(s) of this thing
+		self.sel_sub = -1     #default to referring to the thing itself
+{% endhighlight %}
+
+Applying this (using a KNet) directly we can build links like so:
+
+{% highlight python %}
+#!/usr/bin/python
+from knowledge_net import *
+
+k = KNet()
+
+#dogs are animals with fur
+tmp = k.add_link([k.r('with'), k.r('animal'), k.r('fur')])
+k.add_link([k.r('is'), k.r('dog'), tmp])
+
+#animals are vertebrates
+k.add_link([k.r('is'), k.r('animal'), k.r('vertebrate')])
+
+#he likes the girl who wore the dress
+tmp = k.add_link([k.r('wore'), k.r('girl'), k.r('dress')])
+tmp.set_sub('girl')
+k.add_link([k.r('likes'), k.r('he'), tmp])
+
+print k
+{% endhighlight %}
+
+Which outputs:
+
+{% highlight python %}
+[
+  [0] Name: with
+  [1] Name: animal linked to: [3, 8]
+  [2] Name: fur linked to: [3]
+  [3] Name: with linked to: [6] links: [ 1 2 ] referring: 0
+  [4] Name: is
+  [5] Name: dog linked to: [6]
+  [6] Name: is links: [ 5 3 ] referring: 4
+  [7] Name: vertebrate linked to: [8]
+  [8] Name: is links: [ 1 7 ] referring: 4
+  [9] Name: wore
+  [10] Name: girl linked to: [12]
+  [11] Name: dress linked to: [12]
+  [12] Name: wore linked to: [15] links: [ 10 11 ] referring: 9
+  [13] Name: likes
+  [14] Name: he linked to: [15]
+  [15] Name: likes links: [ 14 12(0) ] referring: 13
+]
+{% endhighlight %}
+
+A couple things to note: I don't make a distiction between 'is' and 'are' for now, because this is semantics, not syntax. There are also duplicates of things; this is because there's 'with' the concept <r1>(0)</r1> and that certain instance of 'with' <r1>(3)</r1> involving <r1>1</r1> <b1>(animal)</b1> and <r1>2</r1> <b1>(fur)</b1>. Then, we have 'dog' being linked to <r1>3</r1> <b1>(animals with fur)</b1> by 'is' <r1>(6)</r1>, giving us 'dog is animal with fur' or more correctly "dogs are animals with fur".
+
+Then, we see the use of KPorts with 15 <b1>(he likes the girl who wore the dress)</b1>. we see that he likes specifically the 0th subelement <r1>(10)</r1> of <r1>12</r1> as opposed to it not having a subelement (referring to wearing) or him liking the 1th subelement <r1>(11)</r1>. We can also see that the first example should really be the dog being the animal (in 'animals with fur') and not the dog being the 'with'.
+
+There is also something called 'referring' which shows the generic concept that a specific instance is referring to. So <r1>6</r1> is referring to <r1>4</r1>.
+
+Syntax
+-------
+
+Another <b1>huuuuge</b1> part of this project is the creation of sentence trees. Almost at every step that I compare this to the human brain, I see that the upper levels always play a role and ignoring them and black-boxing everything, common practice in the tech industry (just look at the <a href="http://en.wikipedia.org/wiki/OSI_model">OSI Model</a>), will never get the complete picture. You can't know if a word is a noun or verb without looking at the sentence as a whole, and you can't understand a sentence as a whole without yet another higher level of understanding. It's turtles all the way <g1>up</g1>!
+
+To see what I'm getting at, consider the way problems are subdivided in engineering and technology in general. nltk has subdivided language processing into tagging, chunking, chinking and other such problems. But we need less division to make things more human. So then, why not create a single gigantic function to solve all those problems; incorporating in it all the information needed. Well, 1. that's ugly and 2. we don't need to abandon problem-division, we just need feedback from the upper layers.
+
+Here's an example: I tried to find a way to get the sentence tree of "I shot an elephant in my pyjamas", an example provided in the nltk docs. Only there was no way to get the sentence tree without cutting corners. I ended up using the <r1>POS tagger</r1> and creating my own brute-force chunker that simply goes through all permutations of a sentence and returns all trees that have the same length as the original sentence and have 'S' as a first node (indicating that the tree represents a sentence and not say, a noun phrase). Code:
+
+{% highlight python %}
+#!/usr/bin/python
+import nltk
+from CFGChartParser import CFGChartParser
+
+sentence = "I shot an elephant in my pyjamas"
+print sentence
+# tag sentence
+tagged = nltk.pos_tag(sentence.split())
+print tagged
+# chunk tags together
+
+parser = CFGChartParser()
+for tree in parser.parse(tagged):
+	print(tree)
+	tree.draw()
+{% endhighlight %}
+
+Giving the following sentence trees:
+
+<img src="http://www.nltk.org/book/tree_images/ch08-tree-1.png" style="background-image:none;background-color:white;height:270px"/>
+
+<img src="http://www.nltk.org/book/tree_images/ch08-tree-2.png" style="background-image:none;background-color:white;height:270px"/>
+
+"CFGChartParser" stands for context-free grammar, a further type of black-box attempting to understand a sentence without considering that the tag assigned to certain words is fluid and not set in stone. Just like in the sentence "students like to study", the tagger will turn this into "<r1>(noun)</r1> <b1>(verb)</b1> <g1>(preposition)</g1> <r1>(noun)</r1>" and the chunker will consider it a bunk sentence (bunk as in invalid and not <a href="http://en.wikipedia.org/wiki/Bunk_Moreland">The Bunk</a>). Study is a noun (as in a place) and a verb (as in a thing to do before finals) but the chunker doesn't know that! Poor chunker, you didn't know any better.
+
+So what I need to beat this problem is a way for the tagger to try again when the chunker fails, and the chunker to try again when the semantics fail ("when pigs fly" being an idiomatic illogical phrase). But I need to go a step further as well, since the meaning of a sentence is not the first meaning found but rather the most probable meaning of it. Having a syntactical error or semantical error is simply a way to reduce that probability to <g1>zero</g1>. But even then, the brain will make up for the terrible grammar and understand the sentence anyway, but that's a talk/feature for another time.
+
+Instead of the brute-force CFG parser, I also tried a built-in CFG parse but that only returned a single sentence tree to save time, and I tried a statistical parser but that was such a black-box of black-boxfuscation that I had no clue how to make it generic. Think about this: what if you replaced the part of your brain that handles sentence processing (assume it's in the same spot) with a chip that "told" you what the sentence means, would you still understand sentences? I think yes, but only because once language is learnt you rarely need to learn more of it. You've already gone through the battering of life-experience that lead you to understanding words. What you wouldn't be able to do is understand sentences that sound like something significant but aren't really (I'm assuming the chip performs a single function of parsing sentences and is truly the black box in which it resembles) like "believe <b1>you</b1> <r1>me</r1>" (assuming the chip didn't already have that sentence hard-coded). Because sentences like that invoke a certain feeling of a meaning, perharps reminiscent of cavemen, and the order of <b1>you</b1>/<r1>me</r1> is preserved as in the actual meaning or "<b1>you</b1> can believe <r1>me</r1>" (as opposed to "believe <r1>me</r1> <b1>you</b1>" which might tend more towards "<r1>I</r1> believe <b1>you</b1>").
+
+This is going back to the earlier paragraph, where having magical boxes that complete a function is not really how the brain works. If anything, the brain can create such magical boxes for temporary usage on the fly and does so constantly. So the end result to me would look like a sort of multi-threaded process (to speed things up) going through trees of meaning/syntax/grammar in order of which was most probable and continuing until a top-level net decides that that was the correct meaning and reinforcing that breadcrumb trail by increasing the probability of the parser/chunker/tagger to pick that branch of the tree in the future; Thus becoming better at finding the "most common" or "most probable" meaning of things, a bit like the brain.
+
+So, after switching instead to a brute-force tagger that I wrote (at first having an abysmal number of known words) I had the following code for my sentence parsing:
+
+{% highlight python %}
+#!/usr/bin/python
+import nltk
+from CFGChartParser import CFGChartParser
+from brute_tagger import brute_tagger
+
+sentence = "I shot an elephant in my pyjamas"
+print sentence
+
+tagger = brute_tagger('tags.pkl')
+chunker = CFGChartParser()
+
+for t in tagger.tag(sentence.split()):		# get all tag combinations
+	for tree in chunker.parse(t):			# get all chunk combinations
+		print(tree)
+		tree.draw()
+{% endhighlight %}
+
+Where, in this case, <r1>"shot"</r1> was returned as <r1>('shot', 'NN', 'VBD')</r1> meaning that it could be either a noun or a verb (definitive). Then, the tagger also has a generator to yield all possible combinations of the tagged sentence, then the code above passes that to the chunker where all possible sentence trees are printed. Unsurprisingly, the trees are the same as above, only in this case, no black-box assumptions were made <a href="https://www.youtube.com/watch?v=UfAfSjqm3ss">goddammit!</a>
+
+**END OF POST**
+
+Archived from my old website. I still think about this post now and then, I didn't "accomplish" anything but for me it helped lay out what are the problems we're trying to solve in AI, NLP and so forth. [Alot](http://thewritepractice.com/wp-content/uploads/2012/05/Alot-vs-a-lot1-600x450.png) of times if you want to learn this stuff it's behind a thick lens of academic nonsense (not to mention paywalls), buzzwords, ego, and dryness that it ends up being inaccessible to the everyday Jane.
+
+Like, reduce your hyperplanes all you want dude, I'm not gonna stop you, but at least tell me what you think a complex quadra-manifold **is** in relation to thought.
