@@ -1,0 +1,147 @@
+---
+layout: post
+title:  "Archived: 4Score"
+date:   2012-06-01
+tags: iphone archived
+---
+One day, my mother was determined to make an iPhone app. She tells me of the multitude of math-based
+games she made as a math prof, and I of course roll my eyes being the good son that I am. Long story short: she convinces
+me, I procrastinate, she convinces me again, I write an iPhone app. Available <a href="https://itunes.apple.com/us/app/4score/id551958584">here</a>.
+
+I wasnt quite sure how I wanted to package this math game, but I was sure about how
+<a href="http://en.wikipedia.org/wiki/Donkey_Kong_Jr._Math">not</a> to package it.
+
+First and foremost, if you're developping for iOS, you <em>need</em> both an iOS device and an OS X environment
+<em>on an actual OS X machine</em> (No Hackintoshes, VMs). Heres a <a href="http://stackoverflow.com/questions/9408307/how-to-create-the-iphone-application-without-mac-os">thread</a> about it.
+
+After trying several less than legal methods, I finally went out and bought an aluminum brick. Otherwise know as
+a Mac Mini. Another thing needed to code in iOS is <b1>Xcode</b1>, and the latest version of it. You'll also need
+a developer license, renewed yearly, for the <r1>"low"</r1> cost of <g1>99$/year</g1>.
+
+If you find yourself not knowing diddly-squat about iOS, Objective-C, and MVC (Most Vicious Concept?) then take a
+look at these links:
+<ul>
+	<li>Mobile Orchard:
+		<a href="http://mobileorchard.com/how-to-make-iphone-apps-part-1-xcode-suite-and-objective-c-3/">Part I</a>,
+		<a href="http://mobileorchard.com/how-to-make-an-iphone-app-for-beginners-part-2-memory-and-controllers/">Part II</a>,
+		<a href="http://mobileorchard.com/how-to-make-an-iphone-app-part-3-table-views/">Part III</a>,
+		<a href="http://mobileorchard.com/how-to-make-an-iphone-app-part-4-navigation-controller/">Part IV</a>,
+		<a href="http://mobileorchard.com/how-to-make-an-iphone-app-part-5-the-accelerometer/">Part V</a>,
+		<a href="http://mobileorchard.com/how-to-make-an-iphone-app-part-6-saving-data/">Part VI</a> to name a few.
+		</li>
+	<li>Ray Wenderlich:
+		<a href="http://www.raywenderlich.com/21320/objectively-speaking-a-crash-course-in-objective-c-ios6">Crash Course</a>,
+		<a href="http://www.raywenderlich.com/5138/beginning-storyboards-in-ios-5-part-1"> Storyboards Part I</a>,
+		<a href="http://www.raywenderlich.com/5191/beginning-storyboards-in-ios-5-part-2">Storyboard Part II</a>,
+		<a href="http://www.raywenderlich.com/8003/how-to-submit-your-app-to-apple-from-no-account-to-app-store-part-1">Setup Part I</a>,
+		<a href="http://www.raywenderlich.com/8003/how-to-submit-your-app-to-apple-from-no-account-to-app-store-part-2">Setup Part II</a>.
+		</li>
+	<li>iOS Workshop (Video):
+		<a href="http://vimeo.com/30645095">Part I</a>,
+		<a href="http://vimeo.com/30832248">Part II</a>,
+		<a href="http://vimeo.com/31165535">Part III</a>,
+		<a href="http://vimeo.com/31625480">Part IV</a>.
+		</li>
+</ul>
+
+{% highlight objc %}
+//
+//  SimpleGameViewController.h
+//  Normal Game mode
+//
+//  Created by Default on 11-07-30.
+//  Copyright 2011 Travectory Studios. All rights reserved.
+//
+
+#import &#60;UIKit/UIKit.h&#62;
+#import "GameMenuViewController.h"
+#import "StatsViewController.h"
+#import "Achievements.h"
+
+@interface SimpleGameViewController : UIViewController &#60;GameMenuDelegate, StatsViewDelegate&#62;{
+	UILabel IBOutlet *pointsLabel;		//Label to display points
+	UILabel IBOutlet *secondaryLabel;	//Label to display win/lose
+	NSInteger roll;				//numerical roll
+	Boolean rolled;				//user has rolled
+	NSInteger grid[16];			//numerical values in 4x4 grid
+	UIButton *buttons[16];			//UIButton array of 4x4 grid
+	UIView *views[16];			//UIImageView array of 4x4 grid
+	UIButton *resetButton;			//game reset button
+	Boolean eks[16];				//bool array of where Xs are placed
+	NSString *skinPath;			//current game skin path
+	NSString *skinName;			//current game skin name
+	int x_scale;				//current game skin x scale
+	int y_scale;				//current game skin y scale
+	int x_off;				//current game skin x offset
+	int y_off;				//current game skin y offset
+	int button_scale;			//current game skin button size
+	NSDate *startDate;			//start time
+	int secondsPassed;			//elapsed seconds
+	NSString* returnString;			//terrible way of messaging between views
+	Achievements* achievements;		//achievements array
+	int MAX_POINTS;				//max points for the game type
+}
+-(void)loadSkin;					//load current game skin
+-(IBAction)openMenu:(id)sender;			
+-(IBAction) onHit:(id) sender;			//button hit event
+-(IBAction) onRoll:(id) sender;			//dice roll event
+-(IBAction) onReset;				//reset event
+-(BOOL) isAllGood;						//is possible to place die
+-(BOOL) isGood:(int) roll XLocation:(int) x YLocation:(int) y;	//is (x,y) "good"?
+-(int) getPoints;						
+-(BOOL) rowIsComplete:(int) row;			//row is full?
+-(BOOL) colIsComplete:(int) col;			//col is full?
+-(NSString*) diceImage:(int) a;			//get current game skin dice image
+@property (retain, nonatomic) IBOutlet UILabel *pointsLabel;
+@property (retain, nonatomic) IBOutlet UILabel *secondaryLabel;
+-(void) startTimer;
+-(int) endTimer;
+
+@end
+{% endhighlight %}
+
+Speaking of that code I just posted, that's the header file for my game window. 4score has 3 game modes so far (Classic,
+Single Line, Double Line). Classic Mode simply uses the <b1>ViewController</b1> you see above. The other game mode inherit
+that class and instantiate their own <b1>ViewController</b1>s.
+
+My full code for <g1>SimpleGameViewController.m</g1> is <a href="SimpleGameViewController.m">here</a>. It might not be
+entirely self explanatory but in making the game itself I only used a couple of techniques:
+
+<ul>
+	<li>Grid buttons were in an array and could all call <b2>openMenu</b2>, <b2>onReset</b2>, and <b2>onHit</b2> in an event based manner. This was all set programmatically.</li>
+	<li>Rolls were stored in a C array instead of in the UIButtons.</li>
+	<li><b2>Dictionaries</b2> were used to store permanent data (Achievements, Game Skin).</li>
+	<li>UIImageViews were laid on top of UIButtons to give the impression of a dice appearing in the button when pressed. These were actually regular UIViews cast as UIImageViews.</li>
+	<li>Segues were used for switching ViewControllers (to goto Menu, Stats, etc).</li>
+</ul>
+
+One problem I did have for awhile before learning about delegates was how to control another view directly. The pre-delegate solution was to do something like this:
+
+{% highlight objc %}
+- (IBAction)continueGame:(id)sender{
+	NSArray* controllers = self.navigationController.viewControllers;
+	GameViewController* parent = (GameViewController*)[controllers objectAtIndex:[controllers count]-1];
+	[parent startTimer];
+	[self dismissModalViewControllerAnimated:YES];
+}
+{% endhighlight %}
+
+Which manhandled the navigation controller itself. Now, with delegates, we get this:
+
+{% highlight objc %}
+- (IBAction)continueGame:(id)sender{
+    [self.delegate returnToGame:@"continue"];
+}
+
+//the other file
+- (void) returnToGame: (NSString*) str{
+    returnString = str;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+{% endhighlight %}
+
+<b>END OF POST</b>
+
+Evidently, I wasn't very good at following through with my blog posts but I've brought this old article to my new site for nostalgia / personal history. I don't think I'll be updating this one as Objective-C isn't in vogue anymore
+
+![#twolander]({{ site.baseurl }}/images/swift_so_hot.jpg)
