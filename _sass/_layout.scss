@@ -170,15 +170,16 @@
 	}
 
 	$elements: 15;
-	$spiral-spin: -40deg;
-	$radius-start: 300px;
+	$spiral-spin: 40deg;
+	$spiral-width: 400px;
+	$spiral-height: 150px;
 	$radius-ramp: 10px;
-	@for $i from 0 to $elements {
+	@for $i from 1 to $elements+1 {
 		.spiral-wrapper:nth-child(#{$i}) {
 			opacity: 1 - ($i/$elements);
-			@include transform(translate(-250px, -80px) rotate($spiral-spin*$i) translate(0, $radius-start+$radius-ramp*$i));
+			@include transform(translate($spiral-width*sin(rad($spiral-spin*($i - 1))), $spiral-height*cos(rad($spiral-spin*($i - 1)))));
 			.spiral-content {
-				@include transform(rotate($spiral-spin*$i*-1));
+				//@include transform(rotate($spiral-spin*$i*-1));
 			}
 		}
 	}
