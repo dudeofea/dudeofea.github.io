@@ -151,33 +151,43 @@
     font-size: 20px;
 }
 
+$post-width: 250px;
 .post-list {
     position: absolute;
 	overflow: visible;
 	top: 50%;
 	left: 50%;
 	@include transform(translate(-50%, -50%));
-
+	height: 80px;
+	width: $post-width;
 	.spiral-wrapper {
 		position: absolute;
 		height: 80px;
-		width: 300px;
+		width: $post-width;
 		background-color: transparent;
 		.spiral-content {
 			background-color: rgba(0,0,0,0.3);
 			box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+		}
+		span {
+			text-align: center;
+			display: block;
+		}
+		h2 a {
+			font-size: 16px;
+			text-align: center;
 		}
 	}
 
 	$elements: 15;
 	$spiral-spin: 40deg;
 	$spiral-width: 400px;
-	$spiral-height: 150px;
+	$spiral-height: 100px;
 	$radius-ramp: 10px;
 	@for $i from 1 to $elements+1 {
 		.spiral-wrapper:nth-child(#{$i}) {
 			opacity: 1 - ($i/$elements);
-			@include transform(translate($spiral-width*sin(rad($spiral-spin*($i - 1))), $spiral-height*cos(rad($spiral-spin*($i - 1)))));
+			@include transform(translate(($spiral-width)*sin(rad($spiral-spin*($i - 1))), ($spiral-height+$i*$radius-ramp)*cos(rad($spiral-spin*($i - 1)))));
 			.spiral-content {
 				//@include transform(rotate($spiral-spin*$i*-1));
 			}
