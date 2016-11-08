@@ -2,14 +2,46 @@
  * Site header
  */
 .site-header {
-    position: absolute;
-	@include transform(translatey(-50%));
-	top: 50%;
-	left: 0;
+	background-color: $main-red;
+	color: $main-white;
+	position: absolute;
+	height: 100%;
 	width: 100%;
-	text-align: center;
-	font-size: 36px;
-	font-weight: bold;
+    .title, .nav {
+		position: absolute;
+		@include transform(translatey(-150%));
+		top: 50%;
+		left: 0;
+		width: 100%;
+		text-align: center;
+		font-family: 'yagitudeh';
+		font-size: 50px;
+	}
+	.nav {
+		left: 50%;
+		max-width: 40%;
+		min-width: 600px;
+		@include transform(translate(-50%, +0%));
+		font-family: $base-font-family;
+		font-size: 25px;
+		font-weight: bold;
+		display: flex;
+		justify-content: center;
+		border-bottom: 2px solid rgba($main-white, 0.4);
+		line-height: 60px;
+		height: 60px;
+		span {
+			min-width: 150px;
+			&:hover {
+				background-color: rgba($main-dark, 0.2);
+				border-bottom: 2px solid $main-white;
+				height: 60px;
+			}
+		}
+	}
+	&.collapsed {
+
+	}
 }
 
 .site-nav {
@@ -34,7 +66,7 @@
         position: absolute;
         top: 9px;
         right: $spacing-unit / 2;
-        background-color: $background-color;
+        //background-color: $background-color;
         border-radius: 5px;
         text-align: right;
 
