@@ -1,0 +1,203 @@
+	// --- Main Colours --- //
+
+	//Dance to forget
+	//$color1: #F9D423;
+	//$color2: #FF4E50;
+
+	//Mantle
+	$color1: #514A9D;
+	$color2: #24C6DC;
+
+	//Emerald Water
+	//$color1: #56B4D3;
+	//$color2: #348F50;
+
+	$green: #1FAD65;
+	$red: #FF4E50;
+
+	//CompE Club Colors
+	$compEgreen: #1B440F;
+	$lightCompEgreen: #48693E;
+
+	// --- Global vars --- //
+	$commit_count: 9;
+
+	// --- Mixins --- //
+	@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+		-moz-border-radius: $radius;
+		-ms-border-radius: $radius;
+			border-radius: $radius;
+	}
+	@mixin transform($transform) {
+		-webkit-transform: $transform;
+		-moz-transform: $transform;
+			-ms-transform: $transform;
+			-o-transform: $transform;
+				transform: $transform;
+	}
+
+	html, body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.commit-list, .diff-view{
+		height: 90%;
+		width: 50%;
+		float: left;
+	}
+
+	.header {
+		height: 10%;
+		width: 100%;
+		background: $compEgreen;
+	}
+
+	.header {
+		img{
+			display: block;
+			float: left;
+			margin: auto;
+			height: 100%;
+		}
+		h1{
+			margin: 0;
+			font-family: Arial;
+			font-size: 3em;
+			color: white;
+			text-align: center;
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+	.countdown{
+		float:right;
+		font-family: Arial;
+		color: #00B2EE;
+		text-align: center;
+		font-size: 40px;
+		transform: translateY(-75%);
+		padding-right: 5%;
+	}
+
+
+	.commit-list {
+		.commit-wrapper {
+			height: 100% / $commit_count;
+			width: 100%;
+			padding: 0;
+			position: relative;
+			box-shadow: inset 0px 1px rgba(0, 0, 0, 0.1);
+		}
+		@for $i from 1 through $commit_count {
+			.commit-wrapper:nth-child(#{$i}) {
+				background-color: mix($lightCompEgreen, $compEgreen, 100% * $i / $commit_count);
+			}
+		}
+		.commit-wrapper.selected .commit {
+			background-color: rgba(255, 255, 255, 0.95);
+		}
+		.commit-wrapper.selected:after {
+			content:"";
+			width:0;
+			height:0;
+			right: 0;
+			top: 50%;
+			@include transform(translateY(-50%));
+			border-top:20px solid transparent;
+			border-bottom:20px solid transparent;
+			border-right:20px solid #FFF;
+			position: absolute;
+		}
+		.commit {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			@include transform(translate(-50%,-50%));
+			box-sizing: content-box;
+			@include border-radius(10px);
+			width: 90%;
+			height: 60%;
+			background-color: rgba(255, 255, 255, 0.75);
+			box-shadow: 0px 1px rgba(0, 0, 0, 0.42);
+			font-size: 16px;
+			padding: 0.5% 1%;
+			img {
+				@include border-radius(5px);
+				height: 100%;
+			}
+			& > div {
+				display: inline-block;
+				margin: 0;
+				font-family: 'Noto Sans', sans-serif;
+				overflow: hidden;
+				height: 100%;
+				line-height: 100%;
+				vertical-align: middle;
+				margin-top: -10px;
+			}
+			.username {
+				margin-left: 10px;
+				margin-right: 10px;
+				width: 12%;
+			}
+			.stats{
+				width: 12%;
+				min-width: 90px;
+			}
+			.insert-count, .delete-count{
+				padding: 0;
+				color: white;
+				@include border-radius(3px);
+				float: left;
+				width: 47%;
+				text-align: center;
+				font-family: monospace;
+				font-size: 80%;
+			}
+			.insert-count {
+				background-color: $green;
+			}
+			.delete-count {
+				background-color: $red;
+				margin-left: 5px;
+			}
+			.message {
+				font-weight: bold;
+				padding-left: 10px;
+				width: 52%;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			.time {
+				position: absolute;
+				right: 2%;
+				top: 45%;
+				@include transform(translateY(-50%));
+				color: rgba(0,0,0,0.5);
+				height: auto;
+				line-height: auto;
+				margin: 0;
+			}
+		}
+	}
+
+	.diff-view {
+		overflow: hidden;
+		pre {
+			margin: 0 1em 1em 1em;
+		}
+		code {
+			overflow: hidden;
+		}
+		.title {
+			font-family: 'Noto Sans', sans-serif;
+			font-weight: bold;
+			font-size: 14px;
+			margin: 0.5em 1em 0.5em 1em;
+		}
+	}
