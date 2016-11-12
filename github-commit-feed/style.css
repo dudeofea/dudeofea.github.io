@@ -29,13 +29,17 @@ html, body {
   transform: translateY(-50%); }
 
 .countdown {
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 45px;
   font-family: Arial;
-  color: #00B2EE;
+  color: white;
   text-align: center;
   font-size: 40px;
   transform: translateY(-75%);
   padding-right: 5%; }
+  .countdown span, .countdown p {
+    display: inline; }
 
 .commit-list .commit-wrapper {
   height: 11.11111%;

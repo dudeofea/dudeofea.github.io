@@ -74,13 +74,18 @@
 		}
 	}
 	.countdown{
-		float:right;
+		position: absolute;
+		right: 0;
+		top: 45px;
 		font-family: Arial;
-		color: #00B2EE;
+		color: white;
 		text-align: center;
 		font-size: 40px;
 		transform: translateY(-75%);
 		padding-right: 5%;
+		span, p {
+			display: inline;
+		}
 	}
 
 
