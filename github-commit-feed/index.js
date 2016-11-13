@@ -26,7 +26,9 @@ $(window).load(function(){
 	for (var i = 0; i < urls.length; i++) {
 		urls[i] = urls[i].substring(urls[i].indexOf("github.com/")+11);
 	};
+	//get most recent commits
 	update_commits(urls);
+	//refresh commit data every minute
 	setInterval(function(){
 		update_commits(urls);
 	}, 60000);
@@ -34,21 +36,38 @@ $(window).load(function(){
 
 //get newest commits
 function update_commits(urls){
-	//get commit info from repos
-	var d = new Dep({ bundleArgs: true });
-	for (var k = 0; k < urls.length; k++) {
-		var url = "https://api.github.com/repos/"+urls[k]+"/commits?access_token="+token;
+	//get all commits
+	function all_commits(deps, repo_name, sha, branch_name){
+		var url = "https://api.github.com/repos/"+repo_name+"/commits?access_token="+token+"&sha="+sha;
 		$.get(url, function(commits){
-			for (var i = 0; i < commits.length; i++) {
-				var commit_date = new Date(commits[i]['commit']['author']['date']);
+			for (var k = 0; k < commits.length; k++) {
+				var commit_date = new Date(commits[k]['commit']['author']['date']);
 				if(commit_date > newest_date){
-					commits[i]['date'] = commit_date;
-					$.get(commits[i]['url']+"?access_token="+token, d.addDep());
-					new_commits.push(commits[i]);
+					//add some extra info to commit
+					commits[k]['date'] = commit_date;
+					commits[k]['branch_name'] = branch_name;
+					//get detailed info
+					$.get(commits[k]['url']+"?access_token="+token, deps.addDep());
+					new_commits.push(commits[k]);
 				}
 			};
 		});
+	}
+	//get all commits from all branches under a repo
+	function all_branches(deps, repo_name){
+		var branch_url = "https://api.github.com/repos/"+repo_name+"/branches?access_token="+token;
+		$.get(branch_url, function(branches){
+			for (var j = 0; j < branches.length; j++) {
+				all_commits(deps, repo_name, branches[j].commit.sha, branches[j].name);
+			}
+		});
+	}
+	//get commits from all repos
+	var d = new Dep({ bundleArgs: true });
+	for (var i = 0; i < urls.length; i++) {
+		all_branches(d, urls[i]);
 	};
+	//when all deps are done, run this
 	d.calc(function(data){
 		//add stats & diffs
 		for (var i = 0; i < data.length / 3; i++) {
@@ -103,7 +122,11 @@ function show_diff(i){
 	var diffs = $('#diff-view');
 	var diff_i = 0;
 	diffs.html('');
+	//add title
+	diffs.append('<div class="diff-title"><p class="branch">On branch '+cur_commits[i]['branch_name']+': </p><p class="desc">'+cur_commits[i]['commit']['message']+'</p></div>');
+	//add the actual diff
 	for (var j = 0; j < cur_commits[i]['files'].length; j++) {
+		console.log(cur_commits[i].files);
 		if(cur_commits[i]['files'][j]['additions'] == 0 && cur_commits[i]['files'][j]['deletions'] == 0){
 			continue;
 		}
@@ -119,9 +142,9 @@ function show_diff(i){
 		total_length += newlines;
 		//add the patch block
 		diffs.append('<div class="diff"><p class="title"></p><pre><code class="diff"></code></pre></div>');
-		//select it
-		var sel = $('#diff-view .diff:nth-child('+(diff_i+1)+') pre code');
-		$('#diff-view .diff:nth-child('+(diff_i+1)+') .title').html(cur_commits[i]['files'][j]['filename']);
+		//select it (+2 since we added the diff-title before the loop)
+		var sel = $('#diff-view .diff:nth-child('+(diff_i+2)+') pre code');
+		$('#diff-view .diff:nth-child('+(diff_i+2)+') .title').html(cur_commits[i]['files'][j]['filename']);
 		//replace < and > with &lt; and &gt;
 		html = html.replace(/</g, '&lt;');
 		html = html.replace(/>/g, '&gt;');
@@ -211,7 +234,7 @@ function print_time(now, date){
 	//show days
 	return parseInt(hr/24)+"d "+parseInt(hr%24)+"h";
 }
-// Based off of: 
+// Based off of:
 // https://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies/
 
 function getTimeRemaining(endtime) {
@@ -271,4 +294,3 @@ function initializeClock(id, endtime) {
 var deadline = 'November 13 2016 12:00:00 GMT-0700';
 //var deadline = new Date(Date.parse(new Date()) + 24 * 60 * 60 * 1000);
 initializeClock("countdown", deadline);
-

@@ -205,4 +205,14 @@
 			font-size: 14px;
 			margin: 0.5em 1em 0.5em 1em;
 		}
+		.diff-title {
+			padding: 1em;
+			.branch {
+				font-weight: bold;
+				display: inline;
+			}
+			.desc {
+				display: inline;
+			}
+		}
 	}

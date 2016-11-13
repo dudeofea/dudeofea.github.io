@@ -173,5 +173,12 @@ html, body {
     font-weight: bold;
     font-size: 14px;
     margin: 0.5em 1em 0.5em 1em; }
+  .diff-view .diff-title {
+    padding: 1em; }
+    .diff-view .diff-title .branch {
+      font-weight: bold;
+      display: inline; }
+    .diff-view .diff-title .desc {
+      display: inline; }
 
 /*# sourceMappingURL=style.css.map */
