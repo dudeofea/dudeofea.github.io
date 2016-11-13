@@ -94,7 +94,7 @@ html, body {
     right: 0;
     background-color: #1f1e1e; }
 
-.popup {
+.popup, .time {
   position: fixed;
   bottom: 30px;
   left: 50%;
@@ -111,8 +111,17 @@ html, body {
   width: 400px;
   text-align: center;
   transition: 2s cubic-bezier(0.99, 0.01, 0.58, 1) all; }
-  .popup.hide {
+  .popup.hide, .time.hide {
     opacity: 0; }
+
+.time {
+  width: 200px;
+  bottom: 50%;
+  -webkit-transform: translate(-50%, 50%);
+  -moz-tranform: translate(-50%, 50%);
+  -ms-transform: translate(-50%, 50%);
+  -o-transform: translate(-50%, 50%);
+  transform: translate(-50%, 50%); }
 
 .spot {
   position: absolute;
@@ -145,6 +154,14 @@ html, body {
   top: 1175px;
   left: 60px; }
 
+#big-table-5 {
+  top: 475px;
+  left: 275px; }
+
+#big-table-6 {
+  top: 665px;
+  left: 275px; }
+
 .small-table {
   width: 75px;
   height: 40px;
@@ -159,6 +176,14 @@ html, body {
 #small-table-2 {
   top: 600px;
   left: 50px; }
+
+#small-table-3 {
+  top: 850px;
+  left: 250px; }
+
+#small-table-4 {
+  top: 850px;
+  left: 375px; }
 
 .round-table {
   width: 40px;
@@ -250,6 +275,16 @@ html, body {
   left: 350px;
   top: 775px;
   height: 225px; }
+
+#wall-14 {
+  left: 262.5px;
+  top: 962.5px;
+  height: 75px; }
+
+#wall-15 {
+  left: 437.5px;
+  top: 962.5px;
+  height: 75px; }
 
 .detached-wall {
   width: 125px;

@@ -20,9 +20,11 @@ var cumulativeOffset = function(element) {
 };
 
 //G, A, Bb, C, D, Eb, F
-var g_minor_432 = [384.87, 432.00, 457.69, 513.74, 576.65, 610.94, 685.76, 769.74, 864.00, 915.38, 1027.47, 1153.30, 1221.88, 1371.51, 1539.47, 1728.00];
+var g_minor_432 = [192.43, 216.00, 228.84, 256.87, 288.33, 305.47, 342.88, 384.87, 432.00, 457.69, 513.74, 576.65, 610.94, 685.76, 769.74, 864.00, 915.38, 1027.47, 1153.30, 1221.88, 1371.51, 1539.47, 1728.00, 1830.75, 2054.95, 2306.60, 2443.76, 2743.03];
+					//G		 A		 Bb		 C		 D		 Eb		 F		 G		 A		 Bb		 C		 D	    Eb		 F		 G	      A		 Bb		 C		 D		  Eb		F		 G		  A			Bb		C		D		  Eb		F
 var color_classes = ['orange', 'green', 'red', 'blue'];
 var used_tables = [];
+var last_times = [];
 
 //TODO: create a sound based on commit info and play
 function play_commit(commit){
@@ -37,18 +39,27 @@ function play_commit(commit){
 	xy.x += rect.width/2;
 	xy.y += rect.height/2;
 	//get frequency (based on sha1)
-	var n = parseInt(commit.sha[0], 16);
-	var duration = 4.5;
-	var pos_sample = new PositionSample(xy, g_minor_432[n]);
+	var n = parseInt(commit.sha[0]+commit.sha[1], 16);
+	//var duration = 1.0;
+	var duration = Math.log((commit.timestamp - last_times[commit.table_i])/10000);
+	if(duration > 6){
+		duration = 6;
+	}
+	if(duration < 0.5){
+		duration = 0.5;
+	}
+	var note = n % g_minor_432.length;
+	var pos_sample = new PositionSample(xy, g_minor_432[note], duration);
 	//color it
 	commit.elem.classList.add(color_classes[n % 4]);
 	used_tables[commit.table_i]++;
+	last_times[commit.table_i] = commit.timestamp;
 	setTimeout(function(ind, cla){
 		used_tables[ind]--;
 		if(used_tables[ind] <= 0){
 			commit.elem.classList.remove(cla);
 		}
-	}, duration * 1000, commit.table_i, color_classes[n % 4]);
+	}, duration * 1000 + 400, commit.table_i, color_classes[note % 7]);
 }
 
 //load all commits of the day and attach to table element
@@ -75,6 +86,7 @@ function load_commits(tables, callback){
 	//set all tables to not used
 	for (var i = 0; i < tables.length; i++) {
 		used_tables.push(0);
+		last_times.push(0);
 	}
 	//for all project tables at hackathon
 	for (var i = 0; i < tables.length; i++) {
@@ -116,7 +128,7 @@ function load_commits(tables, callback){
 	}
 }
 
-//TODO: play through all commits of the day
+//play through all commits of the day
 function play_commits(tables, new_origin, new_dir){
 	//set our position
 	context.listener.setPosition(new_origin.x, new_origin.y, 0);
@@ -125,6 +137,28 @@ function play_commits(tables, new_origin, new_dir){
 		for (var i = 0; i < commits.length; i++) {
 			setTimeout(function(ind){
 				play_commit(commits[ind]);
+				var time = document.getElementById('time');
+				var d = new Date(commits[ind]['commit']['author']['date']);
+				var hr = d.getHours();
+				var min = d.getMinutes();
+				var sec = d.getSeconds();
+				if (min < 10) {
+					min = "0" + min;
+				}
+				if (sec < 10) {
+					sec = "0" + sec;
+				}
+				var ampm = "";
+				if(hr == 12){
+					ampm = "PM";
+				}else if(hr > 12){
+					hr -= 12;
+					ampm = "PM";
+				}else{
+					ampm = "AM";
+				}
+				time.innerHTML = " " + hr + ":" + min + ":" + sec + ampm;
+				time.classList.remove('hide');
 			}, commits[i].timestamp / 1000, i);
 		}
 	});
@@ -182,12 +216,12 @@ domready(function(){
 });
 
 // Super version: http://chromium.googlecode.com/svn/trunk/samples/audio/simple.html
-function PositionSample(position, freq) {
+function PositionSample(position, freq, duration) {
 	this.isPlaying = false;
 
 	//create random data in audio buffer
-	var fadeCount = context.sampleRate * 0.5;	//fade time
-	var frameCount = context.sampleRate * 4.0; //4s of audio
+	var fadeCount = context.sampleRate * 0.2;	//fade time
+	var frameCount = context.sampleRate * duration; //4s of audio
 	var audio_buffer = context.createBuffer(1, 2*fadeCount + frameCount, context.sampleRate);
 	var audio_frames = audio_buffer.getChannelData(0);
 	var sin_scale = freq * 2 * Math.PI / context.sampleRate;
@@ -199,12 +233,12 @@ function PositionSample(position, freq) {
 	//then play the sample
 	for (var i = 0; i < frameCount; i++) {
 		//audio data needs to be between -1.0 and 1.0
-		audio_frames[fadeCount + i] = 0.8 * Math.sin(i * sin_scale);
+		audio_frames[fadeCount + i] = 0.8 * Math.sin((fadeCount + i) * sin_scale);
 	}
 	//then a fade out
 	for (var i = 0; i < fadeCount; i++) {
 		//audio data needs to be between -1.0 and 1.0
-		audio_frames[fadeCount + frameCount + i] = ((fadeCount-i)/fadeCount) * 0.8 * Math.sin(i * sin_scale);
+		audio_frames[fadeCount + frameCount + i] = ((fadeCount-i)/fadeCount) * 0.8 * Math.sin((fadeCount + frameCount + i) * sin_scale);
 	}
 	this.buffer = audio_buffer;
 	this.setPosition(position);
@@ -220,7 +254,7 @@ PositionSample.prototype.play = function() {
 	panner.coneOuterGain = 0;
 	panner.coneOuterAngle = 0;
 	panner.coneInnerAngle = 360;
-	panner.rolloffFactor = 0.1;
+	panner.rolloffFactor = 0.15;
 	panner.connect(context.destination);
 	source.connect(panner);
 	source.start(0);
