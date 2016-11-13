@@ -49,7 +49,7 @@ abbr, acronym {
   border: 0; }
 
 html, body {
-  background-color: #7c2020; }
+  background-color: #1f1e1e; }
 
 .rotate {
   -webkit-transform: rotate(90deg);
@@ -58,10 +58,26 @@ html, body {
   -o-transform: rotate(90deg);
   transform: rotate(90deg); }
 
+.big-table.orange, .small-table.orange {
+  background-color: #CF5C36; }
+
+.big-table.green, .small-table.green {
+  background-color: #157F1F; }
+
+.big-table.red, .small-table.red {
+  background-color: #EF233C; }
+
+.big-table.blue, .small-table.blue {
+  background-color: #226CE0; }
+
+.floorplan {
+  padding: 100px; }
+
 .main-room {
   height: 1300px;
   width: 725px;
-  background-color: brown;
+  background: url(wood_planks.jpg);
+  background-size: 300px;
   position: relative; }
   .main-room .left-wall {
     height: 400px;
@@ -69,20 +85,49 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #7c2020; }
+    background-color: #1f1e1e; }
   .main-room .right-wall {
     height: 200px;
     width: 75px;
     position: absolute;
     top: 600px;
     right: 0;
-    background-color: #7c2020; }
+    background-color: #1f1e1e; }
+
+.popup {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-tranform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 18px;
+  font-family: monospace;
+  width: 400px;
+  text-align: center;
+  transition: 2s cubic-bezier(0.99, 0.01, 0.58, 1) all; }
+  .popup.hide {
+    opacity: 0; }
+
+.spot {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white; }
 
 .big-table {
   width: 125px;
   height: 60px;
   background-color: black;
-  position: absolute; }
+  position: absolute;
+  transition: 0.5s ease all; }
 
 #big-table-1 {
   top: 35px;
@@ -95,6 +140,25 @@ html, body {
 #big-table-3 {
   top: 200px;
   left: 100px; }
+
+#big-table-4 {
+  top: 1175px;
+  left: 60px; }
+
+.small-table {
+  width: 75px;
+  height: 40px;
+  background-color: black;
+  position: absolute;
+  transition: 0.5s ease all; }
+
+#small-table-1 {
+  top: 912.5px;
+  left: 50px; }
+
+#small-table-2 {
+  top: 600px;
+  left: 50px; }
 
 .round-table {
   width: 40px;
@@ -146,5 +210,63 @@ html, body {
   left: 225px;
   top: 300px;
   height: 100px; }
+
+#wall-6 {
+  left: 350px;
+  top: 275px;
+  height: 250px; }
+
+#wall-7 {
+  left: 225px;
+  top: 400px;
+  height: 600px; }
+
+#wall-8 {
+  left: 475px;
+  top: 400px;
+  height: 125px; }
+
+#wall-9 {
+  left: 475px;
+  top: 575px;
+  height: 125px; }
+
+#wall-10 {
+  left: 475px;
+  top: 750px;
+  height: 250px; }
+
+#wall-11 {
+  left: 350px;
+  top: 475px;
+  height: 250px; }
+
+#wall-12 {
+  left: 350px;
+  top: 650px;
+  height: 250px; }
+
+#wall-13 {
+  left: 350px;
+  top: 775px;
+  height: 225px; }
+
+.detached-wall {
+  width: 125px;
+  height: 15px;
+  background-color: black;
+  position: absolute; }
+
+#dwall-1 {
+  top: 1075px;
+  left: 15px; }
+
+#dwall-2 {
+  top: 775px;
+  left: 15px; }
+
+#dwall-3 {
+  top: 450px;
+  left: 15px; }
 
 /*# sourceMappingURL=style.css.map */

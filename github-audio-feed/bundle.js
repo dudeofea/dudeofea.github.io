@@ -1,263 +1,252 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var domready = require("domready");
 
-//use the body as our main game window
-domready(function(){ init_audio_feed(); });
-
+//globals
 var context = new AudioContext();
+var token = gitToken.token;
 
-//Helper class used by HTML5Rocks
-function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
-  this.loadCount = 0;
+var cumulativeOffset = function(element) {
+    var top = 0, left = 0;
+    do {
+        top += element.offsetTop  || 0;
+        left += element.offsetLeft || 0;
+        element = element.offsetParent;
+    } while(element);
+
+    return {
+		x: left,
+        y: top
+    };
+};
+
+//G, A, Bb, C, D, Eb, F
+var g_minor_432 = [384.87, 432.00, 457.69, 513.74, 576.65, 610.94, 685.76, 769.74, 864.00, 915.38, 1027.47, 1153.30, 1221.88, 1371.51, 1539.47, 1728.00];
+var color_classes = ['orange', 'green', 'red', 'blue'];
+var used_tables = [];
+
+//TODO: create a sound based on commit info and play
+function play_commit(commit){
+	//clear colors from element
+	var new_list = [];
+	for (var i = 0; i < color_classes.length; i++) {
+		commit.elem.classList.remove(color_classes[i]);
+	}
+	//get position
+	var xy = cumulativeOffset(commit.elem);
+	var rect = commit.elem.getBoundingClientRect();
+	xy.x += rect.width/2;
+	xy.y += rect.height/2;
+	//get frequency (based on sha1)
+	var n = parseInt(commit.sha[0], 16);
+	var duration = 4.5;
+	var pos_sample = new PositionSample(xy, g_minor_432[n]);
+	//color it
+	commit.elem.classList.add(color_classes[n % 4]);
+	used_tables[commit.table_i]++;
+	setTimeout(function(ind, cla){
+		used_tables[ind]--;
+		if(used_tables[ind] <= 0){
+			commit.elem.classList.remove(cla);
+		}
+	}, duration * 1000, commit.table_i, color_classes[n % 4]);
 }
 
-BufferLoader.prototype.loadBuffer = function(url, index) {
-  // Load buffer asynchronously
-  var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  request.responseType = "arraybuffer";
-
-  var loader = this;
-
-  request.onload = function() {
-    // Asynchronously decode the audio file data in request.response
-    loader.context.decodeAudioData(
-      request.response,
-      function(buffer) {
-        if (!buffer) {
-          alert('error decoding file data: ' + url);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount == loader.urlList.length)
-          loader.onload(loader.bufferList);
-      },
-      function(error) {
-        console.error('decodeAudioData error', error);
-      }
-    );
-  }
-
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
-
-  request.send();
+//load all commits of the day and attach to table element
+function load_commits(tables, callback){
+	var all_commits = [];
+	var start_date = new Date(2016, 10, 12, 12, 0, 0, 0);	//start of hackathon
+	//to return just once
+	var callback_count = 0;
+	var callback_ind = 0;
+	var internal_callback = function(){
+		callback_ind++;
+		if(callback_count == callback_ind){
+			//sort by date, return
+			all_commits.sort(function(a, b){
+				if(a['date'] > b['date'])
+					return 1;
+				if(a['date'] < b['date'])
+					return -1;
+				return 0;
+			});
+			callback(all_commits);
+		}
+	}
+	//set all tables to not used
+	for (var i = 0; i < tables.length; i++) {
+		used_tables.push(0);
+	}
+	//for all project tables at hackathon
+	for (var i = 0; i < tables.length; i++) {
+		if(tables[i].attributes['data-url']){
+			setTimeout(function(url, table_i){
+				var hashes = [];
+				//remove github link and just leave /:author/:repo:
+				url = url.substring(url.indexOf("github.com/")+11);
+				//get all branches of repo
+				var branch_url = "https://api.github.com/repos/"+url+"/branches?access_token="+token;
+				$.get(branch_url, function(branches){
+					callback_count += branches.length;
+					for (var j = 0; j < branches.length; j++) {
+						setTimeout(function(sha){
+							//get all commits with this sha
+							var commits_url = "https://api.github.com/repos/"+url+"/commits?access_token="+token+"&sha="+sha;
+							$.get(commits_url, function(commits){
+								for (var k = 0; k < commits.length; k++) {
+									var commit_date = new Date(commits[k]['commit']['author']['date']);
+									if(commit_date > start_date){
+										if(hashes.indexOf(commits[k].sha) >= 0){
+											continue;
+										}
+										commits[k]['date'] = commit_date;
+										commits[k]['timestamp'] = commit_date - start_date;
+										commits[k]['elem'] = tables[table_i];
+										commits[k]['table_i'] = table_i;
+										hashes.push(commits[k].sha);
+										all_commits.push(commits[k]);
+									}
+								}
+								internal_callback();
+							});
+						}, 0, branches[j].commit.sha);
+					}
+				});
+			}, 0, tables[i].attributes['data-url'].value, i);
+		}
+	}
 }
 
-BufferLoader.prototype.load = function() {
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
+//TODO: play through all commits of the day
+function play_commits(tables, new_origin, new_dir){
+	//set our position
+	context.listener.setPosition(new_origin.x, new_origin.y, 0);
+	context.listener.setOrientation(new_dir.x,new_dir.y,0, 0,0,-1);
+	load_commits(tables, function(commits){
+		for (var i = 0; i < commits.length; i++) {
+			setTimeout(function(ind){
+				play_commit(commits[ind]);
+			}, commits[i].timestamp / 1000, i);
+		}
+	});
 }
 
-// Draws a canvas and tracks mouse click/drags on the canvas.
-function Field(canvas) {
-  this.ANGLE_STEP = 0.2;
-  this.canvas = canvas;
-  this.isMouseInside = false;
-  this.center = {x: canvas.width/2, y: canvas.height/2};
-  this.angle = 0;
-  this.point = null;
-
-  var obj = this;
-  // Setup mouse listeners.
-  canvas.addEventListener('mouseover', function() {
-    obj.handleMouseOver.apply(obj, arguments)
-  });
-  canvas.addEventListener('mouseout', function() {
-    obj.handleMouseOut.apply(obj, arguments)
-  });
-  canvas.addEventListener('mousemove', function() {
-    obj.handleMouseMove.apply(obj, arguments)
-  });
-  canvas.addEventListener('mousewheel', function() {
-    obj.handleMouseWheel.apply(obj, arguments);
-  });
-  // Setup keyboard listener
-  canvas.addEventListener('keydown', function() {
-    obj.handleKeyDown.apply(obj, arguments);
-  });
-
-  this.manIcon = new Image();
-  this.manIcon.src = 'man.svg';
-
-  this.speakerIcon = new Image();
-  this.speakerIcon.src = 'speaker.svg';
-
-  // Render the scene when the icon has loaded.
-  var ctx = this;
-  this.manIcon.onload = function() {
-    ctx.render();
-  }
-}
-
-Field.prototype.render = function() {
-  // Draw points onto the canvas element.
-  var ctx = this.canvas.getContext('2d');
-  ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-  ctx.drawImage(this.manIcon, this.center.x - this.manIcon.width/2,
-                              this.center.y - this.manIcon.height/2);
-  ctx.fill();
-
-  if (this.point) {
-    // Draw it rotated.
-    ctx.save();
-    ctx.translate(this.point.x, this.point.y);
-    ctx.rotate(this.angle);
-    ctx.translate(-this.speakerIcon.width/2, -this.speakerIcon.height/2);
-    ctx.drawImage(this.speakerIcon, 0, 0);
-    //ctx.drawImage(this.speakerIcon, this.point.x - this.speakerIcon.width/2,
-    //                                this.point.y - this.speakerIcon.height/2);
-    ctx.restore();
-  }
-  ctx.fill();
-};
-
-Field.prototype.handleMouseOver = function(e) {
-  this.isMouseInside = true;
-};
-
-Field.prototype.handleMouseOut = function(e) {
-  this.isMouseInside = false;
-  if (this.callback) {
-    this.callback(null);
-  }
-  this.point = null;
-  this.render();
-};
-
-Field.prototype.handleMouseMove = function(e) {
-  if (this.isMouseInside) {
-    // Update the position.
-    this.point = {x: e.offsetX, y: e.offsetY};
-    // Re-render the canvas.
-    this.render();
-    // Callback.
-    if (this.callback) {
-      // Callback with -0.5 < x, y < 0.5
-      this.callback({x: this.point.x - this.center.x,
-                     y: this.point.y - this.center.y});
-    }
-  }
-};
-
-Field.prototype.handleKeyDown = function(e) {
-  // If it's right or left arrow, change the angle.
-  if (e.keyCode == 37) {
-    this.changeAngleHelper(-this.ANGLE_STEP);
-  } else if (e.keyCode == 39) {
-    this.changeAngleHelper(this.ANGLE_STEP);
-  }
-};
-
-Field.prototype.handleMouseWheel = function(e) {
-  e.preventDefault();
-  this.changeAngleHelper(e.wheelDelta/500);
-};
-
-Field.prototype.changeAngleHelper = function(delta) {
-  this.angle += delta;
-  if (this.angleCallback) {
-    this.angleCallback(this.angle);
-  }
-  this.render();
-}
-
-Field.prototype.registerPointChanged = function(callback) {
-  this.callback = callback;
-};
-
-Field.prototype.registerAngleChanged = function(callback) {
-  this.angleCallback = callback;
-};
+//where everything is good to go
+domready(function(){
+	var room = document.getElementsByClassName('main-room')[0];
+	var tables = [];
+	for (var i = 0; i < room.childNodes.length; i++) {
+		var cla = room.childNodes[i].className;
+		//get all tables
+		if(cla != null && cla.indexOf("table") >= 0){
+			tables.push(room.childNodes[i]);
+		}
+	}
+	//get user's position
+	var room_rect = room.getBoundingClientRect();
+	var popup = document.getElementById('popup');
+	room.onclick = function(e){
+		if(e.target.className != 'main-room'){
+			return;
+		}
+		//add a marker
+		var el = document.createElement('div');
+		el.className = 'spot';
+		el.style.left= (e.layerX)+'px';
+		el.style.top = (e.layerY)+'px';
+		room.appendChild(el);
+		var user_pos = {x: e.pageX, y: e.pageY};
+		//change message
+		popup.innerHTML = 'Please click where you were facing';
+		//TODO: get user's orientation
+		this.onclick = function(e){
+			var second_point = {x: e.pageX, y: e.pageY};
+			if(second_point == user_pos){
+				return;
+			}
+			//rotate the element
+			var rads = Math.atan2(second_point.x - user_pos.x, user_pos.y - second_point.y);
+			el.style.transform = 'rotate('+rads+'rad)';
+			var dir = {x: second_point.x - user_pos.x, y: second_point.y - user_pos.y, z: 0};
+			//normalize & start audio
+			var mag = 1/Math.sqrt(dir.x*dir.x + dir.y*dir.y +dir.z*dir.z);
+			dir.x *= mag;
+			dir.y *= mag;
+			dir.z *= mag;
+			this.onclick = null;
+			play_commits(tables, user_pos, dir);
+			//set message
+			popup.innerHTML = 'Enjoy :D';
+			popup.className = 'popup hide';
+		}
+	}
+});
 
 // Super version: http://chromium.googlecode.com/svn/trunk/samples/audio/simple.html
-function PositionSample(el, context) {
-  var urls = ['position.wav'];
-  var sample = this;
-  this.isPlaying = false;
-  this.size = {width: 400, height: 300};
+function PositionSample(position, freq) {
+	this.isPlaying = false;
 
-  // Load the sample to pan around.
-  var loader = new BufferLoader(context, urls, function(buffers) {
-    sample.buffer = buffers[0];
-  });
-  loader.load();
-
-  // Create a new canvas element.
-  var canvas = document.createElement('canvas');
-  canvas.setAttribute('width', this.size.width);
-  canvas.setAttribute('height', this.size.height);
-  el.appendChild(canvas);
-
-  // Create a new Area.
-  field = new Field(canvas);
-  field.registerPointChanged(function() {
-    sample.changePosition.apply(sample, arguments);
-  });
-  field.registerAngleChanged(function() {
-    sample.changeAngle.apply(sample, arguments);
-  });
+	//create random data in audio buffer
+	var fadeCount = context.sampleRate * 0.5;	//fade time
+	var frameCount = context.sampleRate * 4.0; //4s of audio
+	var audio_buffer = context.createBuffer(1, 2*fadeCount + frameCount, context.sampleRate);
+	var audio_frames = audio_buffer.getChannelData(0);
+	var sin_scale = freq * 2 * Math.PI / context.sampleRate;
+	//first do a fade in
+	for (var i = 0; i < fadeCount; i++) {
+		//audio data needs to be between -1.0 and 1.0
+		audio_frames[i] = (i/fadeCount) * 0.8 * Math.sin(i * sin_scale);
+	}
+	//then play the sample
+	for (var i = 0; i < frameCount; i++) {
+		//audio data needs to be between -1.0 and 1.0
+		audio_frames[fadeCount + i] = 0.8 * Math.sin(i * sin_scale);
+	}
+	//then a fade out
+	for (var i = 0; i < fadeCount; i++) {
+		//audio data needs to be between -1.0 and 1.0
+		audio_frames[fadeCount + frameCount + i] = ((fadeCount-i)/fadeCount) * 0.8 * Math.sin(i * sin_scale);
+	}
+	this.buffer = audio_buffer;
+	this.setPosition(position);
 }
 
 PositionSample.prototype.play = function() {
-  // Hook up the audio graph for this sample.
-  var source = context.createBufferSource();
-  source.buffer = this.buffer;
-  source.loop = true;
-  var panner = context.createPanner();
-  panner.coneOuterGain = 0.1;
-  panner.coneOuterAngle = 180;
-  panner.coneInnerAngle = 0;
-  // Set the panner node to be at the origin looking in the +x
-  // direction.
-  panner.connect(context.destination);
-  source.connect(panner);
-  source.start(0);
-  // Position the listener at the origin.
-  context.listener.setPosition(0, 0, 0);
+	// Hook up the audio graph for this sample.
+	var source = context.createBufferSource();
+	source.buffer = this.buffer;
+	source.loop = false;
+	//create an omnidirectional audio source
+	var panner = context.createPanner();
+	panner.coneOuterGain = 0;
+	panner.coneOuterAngle = 0;
+	panner.coneInnerAngle = 360;
+	panner.rolloffFactor = 0.1;
+	panner.connect(context.destination);
+	source.connect(panner);
+	source.start(0);
 
-  // Expose parts of the audio graph to other functions.
-  this.source = source;
-  this.panner = panner;
-  this.isPlaying = true;
+	// Expose parts of the audio graph to other functions.
+	this.source = source;
+	this.panner = panner;
+	this.isPlaying = true;
 }
 
 PositionSample.prototype.stop = function() {
-  this.source.stop(0);
-  this.isPlaying = false;
+	if(this.source){
+		this.source.stop(0);
+	}
+	this.isPlaying = false;
 }
 
-PositionSample.prototype.changePosition = function(position) {
-  // Position coordinates are in normalized canvas coordinates
-  // with -0.5 < x, y < 0.5
-  if (position) {
-    if (!this.isPlaying) {
-      this.play();
-    }
-    var mul = 2;
-    var x = position.x / this.size.width;
-    var y = -position.y / this.size.height;
-    this.panner.setPosition(x * mul, y * mul, -0.5);
-  } else {
-    this.stop();
-  }
-};
-
-PositionSample.prototype.changeAngle = function(angle) {
-//  console.log(angle);
-  // Compute the vector for this angle.
-  this.panner.setOrientation(Math.cos(angle), -Math.sin(angle), 1);
-};
-
-audio_feed = {
-	start: function(layout){
-		//var pos_sample = new PositionSample(el, context);
+PositionSample.prototype.setPosition = function(position) {
+	//play if we have a position
+	if (position) {
+		if (!this.isPlaying) {
+			this.play();
+		}
+		this.panner.setPosition(position.x, position.y, -0.5);
+	} else {
+		this.stop();
 	}
 };
 
