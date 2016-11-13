@@ -18,7 +18,9 @@ $(window).load(function(){
 		"https://github.com/xrendan/ualbertaPrerequisiteExplorer",
 		"https://github.com/red-karpiak/10000Hours",
 		"https://github.com/janukan/hackED-2016-game",
-		"https://github.com/dudeofea/github-audio-feed"
+		"https://github.com/tymoorej/Running-man",
+		"https://github.com/CMPUT301F16T12/CloudyCar",
+		"https://github.com/dudeofea/github-audio-feed",
 	];
 	//remove github link and just leave /:author/:repo:
 	for (var i = 0; i < urls.length; i++) {
@@ -209,7 +211,7 @@ function print_time(now, date){
 	//show days
 	return parseInt(hr/24)+"d "+parseInt(hr%24)+"h";
 }
-// Based off of:
+// Based off of: 
 // https://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies/
 
 function getTimeRemaining(endtime) {
@@ -269,3 +271,4 @@ function initializeClock(id, endtime) {
 var deadline = 'November 13 2016 12:00:00 GMT-0700';
 //var deadline = new Date(Date.parse(new Date()) + 24 * 60 * 60 * 1000);
 initializeClock("countdown", deadline);
+
