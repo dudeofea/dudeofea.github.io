@@ -1,3 +1,7 @@
+$header-blend-1: #E1BC29;
+$header-blend-2: #4D9DE0;
+$header-blend-3: #3BB273;
+
 /**
  * Site header
  */
@@ -7,6 +11,7 @@
 	position: absolute;
 	height: 100%;
 	width: 100%;
+	overflow: hidden;
     .title, .nav {
 		position: absolute;
 		@include transform(translatey(-150%));
@@ -16,11 +21,13 @@
 		text-align: center;
 		font-family: 'yagitudeh';
 		font-size: 50px;
+		z-index: 2;
 	}
 	.nav {
+		position: absolute;
 		left: 50%;
 		max-width: 40%;
-		min-width: 600px;
+		min-width: 700px;
 		@include transform(translate(-50%, +0%));
 		font-family: $base-font-family;
 		font-size: 25px;
@@ -32,8 +39,9 @@
 		height: 60px;
 		span {
 			width: 25%;
+			background-color: rgba($main-dark, 0.1);
 			&:hover {
-				background-color: rgba($main-dark, 0.2);
+				background-color: rgba($main-dark, 0.3);
 				border-bottom: 2px solid $main-white;
 				height: 60px;
 			}
@@ -41,6 +49,33 @@
 	}
 	&.collapsed {
 
+	}
+	.blend-layer-1 {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		@include transform(translate(-42%, 38%));
+		width: 80%;
+		height: 80vw;
+		@include radial-gradient($header-blend-1);
+	}
+	.blend-layer-2 {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		@include transform(translate(46%, 38%));
+		width: 200%;
+		height: 160vw;
+		@include radial-gradient($header-blend-2);
+	}
+	.blend-layer-3 {
+		position: absolute;
+		top: 0;
+		left: 0;
+		@include transform(translate(47%, -51%));
+		width: 80%;
+		height: 80vw;
+		@include radial-gradient($header-blend-3);
 	}
 }
 
