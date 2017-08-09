@@ -26,6 +26,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		font-size: 41px;
 		z-index: 3;
 		transition: $transition-regular all;
+		text-decoration: none;
 	}
 	.nav-wrapper {
 		position: absolute;
@@ -55,23 +56,25 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		font-weight: bold;
 		display: flex;
 		justify-content: center;
-		line-height: 60px;
-		height: 60px;
+		line-height: $header-height;
+		height: $header-height;
 		text-align: center;
 		max-width: 40%;
 		min-width: 700px;
 		margin-left: auto;
-		span {
+		a {
 			width: 25%;
 			cursor: pointer;
 			font-family: 'Open Sans', sans-serif;
 			font-weight: 600;
 			color: rgba($main-white, 0.9);
+			text-decoration: none;
+			height: $header-height;
 			&:hover {
 				background-color: rgba($main-dark, 0.2);
-				border-bottom: 2px solid $main-white;
+				border-bottom: 3px solid $main-white;
+				height: $header-height - 1px;
 				color: lighten($main-white, 20%);
-				height: 60px;
 			}
 		}
 	}
@@ -92,14 +95,14 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 			background-color: rgba($main-dark, 0.7);
 			transition: $transition-slow-quick all;
 		}
-		.nav span:hover {
+		.nav a:hover {
 			background-color: $main-dark;
 			border-bottom: 2px solid $main-white;
 			color: lighten($main-white, 50%);
 		}
 	}
 	.blend-layer-1 {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		left: 0;
 		@include transform(translate(-42%, 38%));
@@ -108,7 +111,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		@include radial-gradient($header-blend-1);
 	}
 	.blend-layer-2 {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		right: 0;
 		@include transform(translate(46%, 38%));
@@ -117,7 +120,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		@include radial-gradient($header-blend-2);
 	}
 	.blend-layer-3 {
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		@include transform(translate(47%, -51%));
@@ -259,7 +262,10 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
  * Page content
  */
 .page-content {
-    padding: $spacing-unit 0;
+    padding: $header-height 0;
+	z-index: 1;
+	position: absolute;
+	width: 100%;
 }
 
 .page-heading {
