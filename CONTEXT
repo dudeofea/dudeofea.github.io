@@ -1,3 +1,5 @@
 color palette: https://coolors.co/f52f57-e1bc29-4d9de0-3bb273-7768ae
 
 - Animate the blend layers on intro, and associate each color with website section
+- On text pages, add article progress bar at the top
+- On text pages, add ability to scroll with keyboard arrows ans snap to nearest line
