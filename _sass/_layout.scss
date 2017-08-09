@@ -2,6 +2,10 @@ $header-blend-1: #E1BC29;
 $header-blend-2: #4D9DE0;
 $header-blend-3: #3BB273;
 
+$transition-regular: 1s ease;
+$transition-slow-quick: 1.5s cubic-bezier(0.79, 0.1, 0.27, 1.01);
+$transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
+
 /**
  * Site header
  */
@@ -12,43 +16,84 @@ $header-blend-3: #3BB273;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-    .title, .nav {
+    .title {
 		position: absolute;
-		@include transform(translatey(-150%));
+		@include transform(translate(-50%, -150%));
 		top: 50%;
-		left: 0;
-		width: 100%;
-		text-align: center;
-		font-family: 'yagitudeh';
-		font-size: 50px;
-		z-index: 2;
-	}
-	.nav {
-		position: absolute;
 		left: 50%;
-		max-width: 40%;
+		text-align: center;
+		font-family: 'yagitudeh', sans-serif;
+		font-size: 50px;
+		z-index: 3;
+		transition: $transition-regular all;
+	}
+	.nav-wrapper {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 40%;
 		min-width: 700px;
 		@include transform(translate(-50%, +0%));
+		transition: $transition-regular top, $transition-quick-slow width;
+		z-index: 2;
+	}
+	.nav-back {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		border-bottom: 2px solid rgba($main-white, 0.4);
+		background-color: rgba($main-dark, 0.1);
+		pointer-events: none;
+		transition: $transition-quick-slow all;
+		z-index: -1;
+	}
+	.nav {
 		font-family: $base-font-family;
 		font-size: 25px;
 		font-weight: bold;
 		display: flex;
 		justify-content: center;
-		border-bottom: 2px solid rgba($main-white, 0.4);
 		line-height: 60px;
 		height: 60px;
+		text-align: center;
+		max-width: 40%;
+		min-width: 700px;
+		margin-left: auto;
 		span {
 			width: 25%;
-			background-color: rgba($main-dark, 0.1);
+			cursor: pointer;
 			&:hover {
-				background-color: rgba($main-dark, 0.3);
+				background-color: rgba($main-dark, 0.2);
 				border-bottom: 2px solid $main-white;
+				color: lighten($main-white, 20%);
 				height: 60px;
 			}
 		}
 	}
 	&.collapsed {
-
+		.title {
+			top: -5px;
+			transform: translate(0,0);
+			left: 17px;
+			transition: $transition-regular all;
+		}
+		.nav-wrapper {
+			top: 0;
+			width: 101%;
+			transition: $transition-regular top, $transition-slow-quick width;
+		}
+		.nav-back {
+			border-bottom: 2px solid rgba($main-white, 0.8);
+			background-color: rgba($main-dark, 0.7);
+			transition: $transition-slow-quick all;
+		}
+		.nav span:hover {
+			background-color: $main-dark;
+			border-bottom: 2px solid $main-white;
+			color: lighten($main-white, 50%);
+		}
 	}
 	.blend-layer-1 {
 		position: absolute;
