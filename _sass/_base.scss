@@ -178,3 +178,10 @@ pre {
         clear: both;
     }
 }
+
+/**
+ * Styles just for immediate page load
+ */
+ .preload * {
+   transition: none !important;
+ }
