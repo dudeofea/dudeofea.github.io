@@ -1,6 +1,7 @@
 ---
 layout: default
-selected_section: about
+header: collapsed
+category: freelance
 ---
 <div id="content-about" class="hidden">
     {% include about.html %}
@@ -11,7 +12,7 @@ selected_section: about
 <div id="content-portfolio" class="hidden">
     {% include portfolio.html %}
 </div>
-<div id="content-freelance" class="hidden">
+<div id="content-freelance">
     {% include freelance.html %}
 </div>
 {% include link-router.html %}

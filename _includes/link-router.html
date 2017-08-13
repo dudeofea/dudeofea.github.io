@@ -1,0 +1,53 @@
+<script>
+//intercept link clicks, since most pages are preloaded
+document.onclick = function (e) {
+    e = e || window.event;
+    var element = e.target || e.srcElement;
+    if (element.tagName == 'A') {
+        return linkClick(element.href);
+    }
+};
+//loads content for home, about, blog, portfolio, freelance without reloading
+function linkClick(url, noHistoryPush){
+    var header = $(".site-header");
+    var path = url.replace(window.location.origin+"/", "");
+    if(path.length == 0){
+        header.attr("class", "site-header");
+        $(".page-content > div").addClass("hidden");
+        if(!noHistoryPush){
+            pushToHistory("Denis Lachance", "");
+        }
+    }else{
+        var content = $("#content-"+path);
+        if(content){
+            header.attr("class", "site-header");
+            $(".page-content > div").addClass("hidden");
+            header.addClass("collapsed");
+            header.addClass(path)
+            content.removeClass("hidden");
+            if(!noHistoryPush){
+                pushToHistory(capitalizeFirstLetter(path), path);
+            }
+        }
+    }
+    return false;
+}
+//what do you think it does?
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+//add a page to browser history
+function pushToHistory(title, path){
+    document.title = title;
+    window.history.pushState(path ,title, "/"+path);
+}
+//used for forward/back in browser
+window.onpopstate = function(e){
+    linkClick(window.location.href, true);
+    if(e.state){
+        document.title = e.state.pageTitle;
+    }else{
+        document.title = "Denis Lachance";
+    }
+};
+</script>

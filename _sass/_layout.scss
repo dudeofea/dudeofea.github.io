@@ -5,12 +5,19 @@ $header-blend-3: #3BB273;
 $transition-regular: 1s ease;
 $transition-slow-quick: 1.5s cubic-bezier(0.79, 0.1, 0.27, 1.01);
 $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
+$transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
+
+@mixin site-header-selected() {
+	background-color: $main-dark;
+	border-bottom: 2px solid $main-white;
+	color: lighten($main-white, 50%);
+	height: $header-height - 1px;
+}
 
 /**
  * Site header
  */
 .site-header {
-	background-color: $main-red;
 	color: $main-white;
 	position: absolute;
 	height: 100%;
@@ -74,11 +81,11 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 			&:hover {
 				background-color: rgba($main-dark, 0.2);
 				border-bottom: 3px solid $main-white;
-				height: $header-height - 1px;
 				color: lighten($main-white, 20%);
 			}
 		}
 	}
+	//transitions for collapsing / uncollapsing
 	&.collapsed {
 		.title {
 			top: 1px;
@@ -93,7 +100,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		}
 		.nav-back {
 			border-bottom: 2px solid rgba($main-white, 0.8);
-			background-color: rgba($main-dark, 0.7);
+			background-color: rgba($main-dark, 0.8);
 			transition: $transition-slow-quick all;
 		}
 		.nav {
@@ -101,12 +108,29 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 			transition: $transition-slow-quick width;
 		}
 		.nav a:hover {
-			background-color: $main-dark;
-			border-bottom: 2px solid $main-white;
-			color: lighten($main-white, 50%);
+			@include site-header-selected();
+		}
+		//show and hide site site content
+		& + .page-content {
+			opacity: 1.0;
+			transition: $transition-very-slow-quick opacity;
 		}
 	}
+	//selecting a certain site section
+	&.about		{ .nav .about 	  { @include site-header-selected(); } }
+	&.blog		{ .nav .blog 	  { @include site-header-selected(); } }
+	&.portfolio { .nav .portfolio { @include site-header-selected(); } }
+	&.freelance { .nav .freelance { @include site-header-selected(); } }
+	//colorful background
 	.blend-layer-1 {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: $main-red;
+	}
+	.blend-layer-2 {
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -115,7 +139,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		height: 80vw;
 		@include radial-gradient($header-blend-1);
 	}
-	.blend-layer-2 {
+	.blend-layer-3 {
 		position: fixed;
 		bottom: 0;
 		right: 0;
@@ -124,7 +148,7 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 		height: 160vw;
 		@include radial-gradient($header-blend-2);
 	}
-	.blend-layer-3 {
+	.blend-layer-4 {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -266,11 +290,66 @@ $transition-quick-slow: 1.5s cubic-bezier(0, 1.15, 0.68, 0.99);
 /**
  * Page content
  */
+$page-header-height: 60px;
+
 .page-content {
-    padding: $header-height 0;
+    padding: $header-height 40px 40px 40px;
 	z-index: 1;
 	position: absolute;
 	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	opacity: 0;
+	& > div {
+		padding-top: $page-header-height;
+		position: relative;
+		height: 100%;
+		width: 100%;
+		box-sizing: border-box;
+		display: block;
+		h1 {
+			position: absolute;
+			top: 10px;
+			left: 0;
+			font-family: "Open Sans", sans-serif;
+			font-weight: bold;
+			font-size: 2em;
+			color: $main-white;
+			line-height: $page-header-height;
+			height: $page-header-height;
+			margin: 0;
+			padding: 0px 8px;
+			z-index: 1;
+			text-shadow: 0px -1px 0px $main-dark;
+		}
+		&.hidden {
+			display: none;
+		}
+	}
+}
+.main-content {
+	background: $main-dark;
+	color: $main-white;
+	border-top: 10px solid $main-white;
+	border-bottom: 7px solid $main-white;
+	position: relative;
+	&:before, &:after {
+		content: " ";
+		display: block;
+		position: absolute;
+		top: -5px;
+		left: 0;
+		border-top: 3px solid $main-dark;
+		width: 100%;
+	}
+	&:after {
+		top: auto;
+		bottom: -5px;
+	}
+	p {
+		margin: 0;
+		padding: 15px;
+	}
 }
 
 .page-heading {
