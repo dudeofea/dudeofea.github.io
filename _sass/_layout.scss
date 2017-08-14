@@ -307,6 +307,8 @@ $page-header-height: 60px;
 		width: 100%;
 		box-sizing: border-box;
 		display: block;
+		max-width: 1400px;
+		margin: 0 auto;
 		h1 {
 			position: absolute;
 			top: 10px;
@@ -333,6 +335,7 @@ $page-header-height: 60px;
 	border-top: 10px solid $main-white;
 	border-bottom: 7px solid $main-white;
 	position: relative;
+	    padding: 10px;
 	&:before, &:after {
 		content: " ";
 		display: block;
@@ -347,8 +350,8 @@ $page-header-height: 60px;
 		bottom: -5px;
 	}
 	p {
-		margin: 0;
-		padding: 15px;
+		margin: 15px 15px;
+		font-size: 18px;
 	}
 }
 
