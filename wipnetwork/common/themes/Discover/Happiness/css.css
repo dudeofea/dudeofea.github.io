@@ -1,0 +1,63 @@
+table.table-main,
+body,
+.body_bg_bg {
+	background-color: rgb(93,92,112) !important;
+	
+}
+.main_gradient {
+	background-image: url("../../Transform/Superhero/main-gradient.png");
+	background-repeat: no-repeat;
+}
+table.main_gradient {
+	margin-top:10px;
+}
+ul#nav li {
+	/*background-image: url("/common/themes/Transform/Superhero/menu_background.png");
+	background-repeat: no-repeat;*/
+}
+.content_bg_bg {
+	/*border: 1px solid rgb(226,201,155);*/
+}
+
+.sidebar_fg_fg hr {
+	border: none;
+	border-top: 1px solid rgb(226,201,155) !important;
+}
+
+.content_corner {
+	background-color: white;
+	padding: 1px;
+}
+.border_corner {
+	background-color: rgb(226,201,155);
+	padding: 1px;
+}
+
+.main_corner_top div,
+.main_corner_bottom div{
+	border-left-color: rgb(93,92,112);
+	border-right-color: rgb(93,92,112);
+}
+/*
+td.content_bg_bg .border_corner .round {
+	border-right-color: #E8DECA;
+	border-left-color: #E8DECA;
+} */
+td.content_bg_bg .content_corner .round {
+	border-right-color: #E2C99B;
+	border-left-color: #E2C99B;
+}
+
+.title_icon div {
+	margin-top: 80px !important;
+}
+
+img.slogan_inner {
+	margin-top: 40px;
+}
+
+div#disclaimer span{
+	font-family:Verdana;
+	font-size:11px;
+	color: rgb(123, 122, 142);
+}
