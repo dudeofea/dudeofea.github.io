@@ -607,12 +607,12 @@ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga
 </HEAD>
 
 
-<BODY class="body_bg_bg" onload="MM_preloadImages('/common/themes/global/images/home_icon.png',
-                                                  '/common/themes/global/images/request_icon.png',
-                                                  '/common/themes/global/images/contact_icon.png',
-                                                  '/common/themes/global/images/home_iconMO.png',
-                                                  '/common/themes/global/images/request_iconMO.png',
-                                                  '/common/themes/global/images/contact_iconMO.png')">
+<BODY class="body_bg_bg" onload="MM_preloadImages('common/themes/global/images/home_icon.png',
+                                                  'common/themes/global/images/request_icon.png',
+                                                  'common/themes/global/images/contact_icon.png',
+                                                  'common/themes/global/images/home_iconMO.png',
+                                                  'common/themes/global/images/request_iconMO.png',
+                                                  'common/themes/global/images/contact_iconMO.png')">
 <INPUT id="actualPageId" type="hidden" value="1673654">
 <DIV id="ada-container">
 <DIV id="ada-switch">
@@ -705,8 +705,8 @@ padding-top: 135px;
 		      	  
 		      	  
 </DIV>
-				  <!-- img src="/common/themes/Discover/Happiness/top_tl.png" />
-				  <img src="/common/themes/Discover/Happiness/top_tr.png" / -->
+				  <!-- img src="common/themes/Discover/Happiness/top_tl.png" />
+				  <img src="common/themes/Discover/Happiness/top_tr.png" / -->
 		      
 </TD>
 		    
@@ -836,8 +836,8 @@ padding-top: 135px;
 				
 <TD align="center" class="1slogan_bg_bg 1border_slogan" height="265" width="490">
 					<!--div style="width: 513px !important; height: 240px !important;">
-				   		<img src="/common/themes/Discover/Happiness/border_tl.png" style="margin-top:-2px; margin-left:-2px;" />
-				   		<img src="/common/themes/Discover/Happiness/border_bl.png" style="margin-top:229px; margin-left:-2px; "/>
+				   		<img src="common/themes/Discover/Happiness/border_tl.png" style="margin-top:-2px; margin-left:-2px;" />
+				   		<img src="common/themes/Discover/Happiness/border_bl.png" style="margin-top:229px; margin-left:-2px; "/>
 				   	</div-->
 				   	
 <DIV class="slogan_corner slogan_bg_bg watermark_slogan contentnode" id="slogan_main_graphic" style="width: 490px !important; height: 265px !important;">
@@ -852,8 +852,8 @@ padding-top: 135px;
 				<TD style="background-color: white"><IMG height="1px" src="../global/spacer.gif" width="1px"></TD>
 				<TD align="center" class="1border_graphic 1slogan_bg_bg" height="265" width="341">
 					<!--div style="width: 318px !important; height: 240px !important;">
-				   		<img src="/common/themes/Discover/Happiness/border_tr.png" style="margin-top:-2px; margin-left:307px;" />
-				   		<img src="/common/themes/Discover/Happiness/border_br.png" style="margin-top:229px; margin-left:307px;" />
+				   		<img src="common/themes/Discover/Happiness/border_tr.png" style="margin-top:-2px; margin-left:307px;" />
+				   		<img src="common/themes/Discover/Happiness/border_br.png" style="margin-top:229px; margin-left:307px;" />
 				   	</div-->
 				   	
 <DIV class="graphic_corner slogan_bg_bg contentnode" id="homeFlash" style="width: 341px !important; height: 265px !important;">
@@ -969,7 +969,7 @@ padding-top: 135px;
 </DIV>
 
 
-<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0" height="265" id="home_graphic" width="341"><PARAM name="movie" value="/common/themes/Discover/Happiness/main.swf"><PARAM name="quality" value="high"><PARAM name="wmode" value="transparent">
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0" height="265" id="home_graphic" width="341"><PARAM name="movie" value="common/themes/Discover/Happiness/main.swf"><PARAM name="quality" value="high"><PARAM name="wmode" value="transparent">
 <EMBED height="265" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" quality="high" src="Happiness/main.swf" type="application/x-shockwave-flash" width="341" wmode="transparent"></EMBED>
 </OBJECT>
 				    	
@@ -1074,8 +1074,8 @@ padding-top: 135px;
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1245,8 +1245,8 @@ font-family:Arial">&nbsp;</SPAN>
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1296,8 +1296,8 @@ font-family:Arial">&nbsp;</SPAN>
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1364,8 +1364,8 @@ font-family:Arial">&nbsp;</SPAN>
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1426,8 +1426,8 @@ font-family:Arial">&nbsp;</SPAN>
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_tl.png" style="margin-top: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_tr.png" style="float: right; margin-top: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1454,8 +1454,8 @@ font-family:Arial">&nbsp;</SPAN>
 <TR>
  				 
 <TD>
-  				  <!--img src="/common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
-  				  <img src="/common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
+  				  <!--img src="common/themes/Discover/Happiness/content_bl.png" style="margin-bottom: -1px; margin-left: -1px;" />
+  				  <img src="common/themes/Discover/Happiness/content_br.png" style="float: right; margin-bottom: -1px; margin-right: -1px;" /-->
  				 </TD>
 				
 </TR>
@@ -1548,8 +1548,8 @@ font-family:Arial">&nbsp;</SPAN>
 	      		
 	      		
 </DIV>
-			  <!--img src="/common/themes/Discover/Happiness/bottom_bl.png" />
-			  <img src="/common/themes/Discover/Happiness/bottom_br.png" / -->
+			  <!--img src="common/themes/Discover/Happiness/bottom_bl.png" />
+			  <img src="common/themes/Discover/Happiness/bottom_br.png" / -->
 	      
 </TD>
 	    

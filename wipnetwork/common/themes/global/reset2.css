@@ -20,7 +20,7 @@ q:before,q:after{content:'';}
 /* End hide from IE Mac */
 /*
 img {
-   behavior: url("/common/themes/global/pngbehavior.htc");
+   behavior: url("common/themes/global/pngbehavior.htc");
 }
 */
 b,strong {font-weight:bold;}
