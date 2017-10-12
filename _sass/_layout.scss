@@ -11,7 +11,6 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 	background-color: $main-dark;
 	border-bottom: 2px solid $main-white;
 	color: lighten($main-white, 50%);
-	height: $header-height - 1px;
 }
 
 /**
@@ -40,7 +39,7 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		top: 50%;
 		left: 50%;
 		width: 40%;
-		min-width: 700px;
+		width: 700px;
 		@include transform(translate(-50%, +0%));
 		transition: $transition-regular top, $transition-quick-slow width;
 		z-index: 2;
@@ -51,7 +50,7 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		height: 100%;
 		left: 0;
 		top: 0;
-		border-bottom: 2px solid rgba($main-white, 0.4);
+		border-bottom: 10px solid rgba($main-white, 0.4);
 		background-color: rgba($main-dark, 0.1);
 		pointer-events: none;
 		transition: $transition-quick-slow all;
@@ -78,10 +77,13 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 			color: rgba($main-white, 0.9);
 			text-decoration: none;
 			height: $header-height;
+			transition: 0.3s ease font-size, 0.3s ease line-height;
 			&:hover {
 				background-color: rgba($main-dark, 0.2);
-				border-bottom: 3px solid $main-white;
+				border-bottom: 10px solid $main-white;
 				color: lighten($main-white, 20%);
+				font-size: 30px;
+				line-height: $header-height + 2px;
 			}
 		}
 	}
