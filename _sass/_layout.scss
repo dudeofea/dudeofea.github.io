@@ -130,10 +130,10 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: $main-red;
 		opacity: 0.0;
 	}
 	.blend-layer-1 {
+		background-color: $main-red;
 		transition: 5s ease all;
 	}
 	.blend-layer-2 {
@@ -183,14 +183,45 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		height: 80vw;
 		transition: 5s ease all;
 	}
-	&.home {
-		.blend-layer-1, .blend-layer-2, .blend-layer-3, .blend-layer-4 {
+	//about blend layers
+	.blend-layer-9 {
+		background-color: #0056c1;
+		transition: 6s ease all;
+	}
+	.blend-layer-10 {
+		@include radial-gradient(#1916da);
+		@include transform(translate(11%, -36%));
+		width: 80%;
+		height: 80vw;
+		transition: 10s ease all;
+	}
+	.blend-layer-11 {
+		@include radial-gradient(#973bdc);
+		@include transform(translate(-62%, -5%));
+		width: 80%;
+		height: 80vw;
+		transition: 12s cubic-bezier(0.03, 0.65, 0, 1.01) all;
+	}
+	.blend-layer-12 {
+		@include radial-gradient(#973bdc);
+		@include transform(translate(90%, -46%));
+		width: 80%;
+		height: 80vw;
+		transition: 12s cubic-bezier(0.03, 0.65, 0, 1.01) all;
+	}
+	//blend layer triggers
+	&.home { .blend-layer-1, .blend-layer-2, .blend-layer-3, .blend-layer-4 {
+		opacity: 1.0;
+	} }
+	&.about { .blend-layer-5, .blend-layer-6, .blend-layer-7, .blend-layer-8 {
+		opacity: 1.0;
+	} }
+	&.blog {
+		.blend-layer-9, .blend-layer-10, .blend-layer-11, .blend-layer-12 {
 			opacity: 1.0;
 		}
-	}
-	&.about {
-		.blend-layer-5, .blend-layer-6, .blend-layer-7, .blend-layer-8 {
-			opacity: 1.0;
+		.blend-layer-11, .blend-layer-12 {
+			transition: 12s cubic-bezier(0.25, 0.1, 1, -0.27) all;
 		}
 	}
 }
