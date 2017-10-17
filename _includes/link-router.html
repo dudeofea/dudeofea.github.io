@@ -12,7 +12,7 @@ function linkClick(url, noHistoryPush){
     var header = $(".site-header");
     var path = url.replace(window.location.origin+"/", "");
     if(path.length == 0){
-        header.attr("class", "site-header");
+        header.attr("class", "site-header home");
         $(".page-content > div").addClass("hidden");
         if(!noHistoryPush){
             pushToHistory("Denis Lachance", "");

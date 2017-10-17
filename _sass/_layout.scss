@@ -1,5 +1,5 @@
 $header-blend-1: #E1BC29;
-$header-blend-2: #4D9DE0;
+$header-blend-2: #0072ff;
 $header-blend-3: #3BB273;
 
 $transition-regular: 1s ease;
@@ -11,6 +11,8 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 	background-color: $main-dark;
 	border-bottom: 2px solid $main-white;
 	color: lighten($main-white, 50%);
+	font-size: 30px;
+	line-height: $header-height + 2px;
 }
 
 /**
@@ -79,11 +81,9 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 			height: $header-height;
 			transition: 0.3s ease font-size, 0.3s ease line-height;
 			&:hover {
-				background-color: rgba($main-dark, 0.2);
+				@include site-header-selected();
+				background-color: rgba($main-dark, 0.6);
 				border-bottom: 10px solid $main-white;
-				color: lighten($main-white, 20%);
-				font-size: 30px;
-				line-height: $header-height + 2px;
 			}
 		}
 	}
@@ -114,7 +114,7 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		}
 		//show and hide site site content
 		& + .page-content {
-			opacity: 1.0;
+			opacity: 0.0;
 			transition: $transition-very-slow-quick opacity;
 		}
 	}
@@ -124,40 +124,74 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 	&.portfolio { .nav .portfolio { @include site-header-selected(); } }
 	&.freelance { .nav .freelance { @include site-header-selected(); } }
 	//colorful background
-	.blend-layer-1 {
+	.blend-layer {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
 		background-color: $main-red;
+		opacity: 0.0;
+	}
+	.blend-layer-1 {
+		transition: 5s ease all;
 	}
 	.blend-layer-2 {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		@include transform(translate(-42%, 38%));
+		@include transform(translate(-42%, -12%));
+		@include radial-gradient($header-blend-1);
 		width: 80%;
 		height: 80vw;
-		@include radial-gradient($header-blend-1);
+		transition: 5s ease all;
 	}
 	.blend-layer-3 {
-		position: fixed;
-		bottom: 0;
-		right: 0;
-		@include transform(translate(46%, 38%));
+		@include transform(translate(-3%, -32%));
+		@include radial-gradient($header-blend-2);
 		width: 200%;
 		height: 160vw;
-		@include radial-gradient($header-blend-2);
+		transition: 5s ease all;
 	}
 	.blend-layer-4 {
-		position: fixed;
-		top: 0;
-		left: 0;
+		@include transform(translate(47%, -51%));
+		@include radial-gradient($header-blend-3);
+		width: 80%;
+		height: 80vw;
+		transition: 5s ease all;
+	}
+	//about blend layers
+	.blend-layer-5 {
+		background-color: #ff5d5d;
+		transition: 10s ease all;
+	}
+	.blend-layer-6 {
+		@include radial-gradient(#d22876);
+		@include transform(translate(-43%, -11%));
+		width: 80%;
+		height: 80vw;
+		transition: 5s ease all;
+	}
+	.blend-layer-7 {
+		@include radial-gradient(#dc863b);
+		@include transform(translate(-17%, -18%));
+		width: 200%;
+		height: 160vw;
+		transition: 5s ease all;
+	}
+	.blend-layer-8 {
+		@include radial-gradient(#f58700);
 		@include transform(translate(47%, -51%));
 		width: 80%;
 		height: 80vw;
-		@include radial-gradient($header-blend-3);
+		transition: 5s ease all;
+	}
+	&.home {
+		.blend-layer-1, .blend-layer-2, .blend-layer-3, .blend-layer-4 {
+			opacity: 1.0;
+		}
+	}
+	&.about {
+		.blend-layer-5, .blend-layer-6, .blend-layer-7, .blend-layer-8 {
+			opacity: 1.0;
+		}
 	}
 }
 
