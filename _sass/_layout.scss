@@ -159,31 +159,31 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 	}
 	//about blend layers
 	.blend-layer-5 {
-		background-color: #ff5d5d;
+		background-color: #ffbd00;
 		transition: 10s ease all;
 	}
 	.blend-layer-6 {
-		@include radial-gradient(#d22876);
+		@include radial-gradient(#d24f28);
 		@include transform(translate(-43%, -11%));
 		width: 80%;
 		height: 80vw;
 		transition: 5s ease all;
 	}
 	.blend-layer-7 {
-		@include radial-gradient(#dc863b);
-		@include transform(translate(-17%, -18%));
+		@include radial-gradient(rgba(255, 9, 179, 0.82));
+		@include transform(translate(-8%, -31%));
 		width: 200%;
 		height: 160vw;
 		transition: 5s ease all;
 	}
 	.blend-layer-8 {
-		@include radial-gradient(#f58700);
+		@include radial-gradient(#ffeb00);
 		@include transform(translate(47%, -51%));
 		width: 80%;
 		height: 80vw;
 		transition: 5s ease all;
 	}
-	//about blend layers
+	//blog blend layers
 	.blend-layer-9 {
 		background-color: #0056c1;
 		transition: 6s ease all;
@@ -209,6 +209,57 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		height: 80vw;
 		transition: 12s cubic-bezier(0.03, 0.65, 0, 1.01) all;
 	}
+	//portfolio blend layers
+	.blend-layer-13 {
+		background-color: #3dd256;
+		transition: 6s ease all;
+	}
+	.blend-layer-14 {
+		@include radial-gradient(#0bd2d2);
+		@include transform(translate(-55%, -32%));
+		width: 80%;
+		height: 80vw;
+		transition: 2s ease all;
+	}
+	.blend-layer-15 {
+		@include radial-gradient(#b4dc3b);
+		width: 80%;
+		height: 80vw;
+		transition: 12s cubic-bezier(0.03, 0.65, 0, 1.01) all;
+	}
+	.blend-layer-16 {
+		@include radial-gradient(#5298d4);
+		@include transform(translate(51%, -72%));
+		width: 80%;
+		height: 80vw;
+		transition: 2s ease all;
+	}
+	//freelance blend layers
+	.blend-layer-17 {
+		background-color: #F52F57;
+		transition: 6s ease all;
+	}
+	.blend-layer-18 {
+		@include radial-gradient(rgba(239, 0, 255, 0.54));
+		@include transform(translate(-45%, -24%));
+		width: 80%;
+		height: 80vw;
+		transition: 2s ease all;
+	}
+	.blend-layer-19 {
+		@include radial-gradient(rgba(219, 74, 255, 0.52));
+		@include transform(translate(65%, -2%));
+		width: 80%;
+		height: 80vw;
+		transition: 2s ease all;
+	}
+	.blend-layer-20 {
+		@include radial-gradient(#ff854b);
+		@include transform(translate(-20%, -62%));
+		width: 80%;
+		height: 80vw;
+		transition: 2s ease all;
+	}
 	//blend layer triggers
 	&.home { .blend-layer-1, .blend-layer-2, .blend-layer-3, .blend-layer-4 {
 		opacity: 1.0;
@@ -224,6 +275,12 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 			transition: 12s cubic-bezier(0.25, 0.1, 1, -0.27) all;
 		}
 	}
+	&.portfolio { .blend-layer-13, .blend-layer-14, .blend-layer-15, .blend-layer-16 {
+		opacity: 1.0;
+	} }
+	&.freelance { .blend-layer-17, .blend-layer-18, .blend-layer-19, .blend-layer-20 {
+		opacity: 1.0;
+	} }
 }
 
 .site-nav {
