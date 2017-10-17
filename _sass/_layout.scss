@@ -114,7 +114,7 @@ $transition-very-slow-quick: 1.5s cubic-bezier(0.74, 0.02, 0.54, -0.1);
 		}
 		//show and hide site site content
 		& + .page-content {
-			opacity: 0.0;
+			opacity: 1.0;
 			transition: $transition-very-slow-quick opacity;
 		}
 	}
